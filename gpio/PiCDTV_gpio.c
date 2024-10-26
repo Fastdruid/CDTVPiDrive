@@ -10,8 +10,8 @@
 Co-Author   : David Sharp
 Date        : 18/10/2024
 Version     : 0.1
-Name        : PiDrive_gpio.c
-Description : CDROM specific functions for the CDTVPiDrive
+Name        : PiCDTV_gpio.c
+Description : This is the reverse of PiDrive_gpio. Basically CDROM specific functions to emulate a CDTV for a real CDTV drive for testing. 
 Notes       : GPIO stuff heavily based on the original PiStorm code (ps_protocol.c). Essentially setup_gpio() is the same as PiStorm (with the header to match).
               All the rest however is my code. Sorry about that. :)
 */
@@ -50,38 +50,39 @@ static void setup_gpio() {
 }
 
 /*
-GPIO0  = CDRST (Always Input)
-GPIO1  = SCCK (Always Input)
-GPIO2  = SDATA (Unsure -  Probably bidirectional - I2C?)
-GPIO3  = SCK ( Unsure - Probably bidirectional - I2C?)
-GPIO4  = EFFK (Always Output)
-GPIO5  = SCOR (Always Output)
-GPIO6  = *STCH (Always Output)
-GPIO7  = *ENABLE (Always Input)
-GPIO8  = DRQ (Always Output)
-GPIO9  = *HWR (Always Input)
-GPIO10 = *DTEN (Always Output)
-GPIO11 = *HRD (Always Input)
-GPIO12 = *STEN (Always Output)
-GPIO13 = *CMD (Always Input)
-GPIO14 = SBCP (Always Output)
-GPIO15 = *XAEN (Always Output)
+Everything is opposite...
+One exception, GPIO2/SDATA has been stolen to be the direction signal. In hindsight I should have fitted an inverter as well...
+
+
+
+GPIO0  = CDRST (Always Output)
+GPIO1  = SCCK (Always Output)
+GPIO2  = Data Direction (Always Output). High is Input. Low is Output.
+GPIO3  = Not Used
+GPIO4  = EFFK (Always Input)
+GPIO5  = SCOR (Always Input)
+GPIO6  = *STCH (Always Input)
+GPIO7  = *ENABLE (Always Output)
+GPIO8  = DRQ (Always Input)
+GPIO9  = *HWR (Always Output)
+GPIO10 = *DTEN (Always Input)
+GPIO11 = *HRD (Always Output)
+GPIO12 = *STEN (Always Input)
+GPIO13 = *CMD (Always Output)
+GPIO14 = SBCP (Always Input)
+GPIO15 = *XAEN (Always Input)
 GPIO16 = DB7 (Bidirectional)
 GPIO17 = DB6 (Bidirectional)
-GPIO18 = BCLK (Always Output - PCM CLK)
-GPIO19 = LRCLK (Always Output - PCM FS)
-GPIO20 = AEMP (Always Output)
-GPIO21 = DATA (Always Output - PCM OUT)
+GPIO18 = BCLK (Always input - PCM CLK)
+GPIO19 = LRCLK (Always Input - PCM FS)
+GPIO20 = AEMP (Always Input)
+GPIO21 = DATA (Always Input - PCM OUT)
 GPIO22 = DB5 (Bidirectional)
 GPIO23 = DB4 (Bidirectional)
 GPIO24 = DB3 (Bidirectional)
 GPIO25 = DB2 (Bidirectional)
 GPIO26 = DB1 (Bidirectional)
 GPIO27 = DB0 (Bidirectional)
-
-
-6,10,12,15
-
 
 GPIO32 - > 0
 00000000 00010000 11010101 00000000
@@ -94,8 +95,8 @@ GPIO 9 - 0
 GPFSEL0_INPUT
 
     9   8   7   6   5   4   3   2   1   0
-00 000 001 000 001 001 001 100 100 000 000 == 0x01049900
-   In  Out In  Out Out Out I2C I2C In  In
+00 001 000 001 000 000 000 001 001 001 001
+   Out In  Out In  In  In  Out Out Out Out
 
 GPFSEL0_OUTPUT = GPFSEL0_INPUT
 
@@ -104,28 +105,29 @@ GPIO 19 - 10
 GPFSEL1_INPUT
 
    19  18  17  16  15  14  13  12  11  10
-00 100 100 000 000 001 001 000 001 000 001 -- 0x24009041
-   PCM PCM In  In  Out Out In  Out In  Out
+   000 000 000 000 000 000 001 000 001 000
+   In  In  In  in  In  In  Out In  Out In
+
 
 GPFSEL1_OUTPUT 
 
    19  18  17  16  15  14  13  12  11  10
-00 100 100 001 001 001 001 000 001 000 001 == 0x24249041
-   PCM PCM Out Out Out Out In  Out In  Out
+   000 000 001 001 001 001 001 000 001 000
+   In  In  Out Out in  in  Out In  Out in 
 
 
 GPIO 29 - 20
 GPFSEL2_INPUT
 
    29  28  27  26  25  24  23  22  21  20
-00 000 000 000 000 000 000 000 000 100 001 == 0x00000021
-   NC  NC  In  In  In  In  In  In  PCM Out
+00 000 000 000 000 000 000 000 000 000 000
+   NC  NC  In  In  In  In  In  In  In  In 
 
 GPFSEL2_OUTPUT 
 
    29  28  27  26  25  24  23  22  21  20
-00 000 000 001 001 001 001 001 001 100 001 == 0x00249261
-   NC  NC  Out Out Out Out Out Out PCM Out
+00 000 000 001 001 001 001 001 001 000 000
+   NC  NC  Out Out Out Out Out Out In  In 
 
 gpio + 0  = GPFSEL0 GPIO Function Select 0 (GPIO0-9)
 gpio + 1  = GPFSEL1 GPIO Function Select 1 (GPIO10-19)
@@ -145,12 +147,14 @@ gpio + 34 = GPAFEN  GPIO Pin Asysnchronous Falling Edge Detect Enable 0
 
 void setup_pidrive() {
   setup_io();
+
+// So for this we're by default an output.
+
 //  *(gpio + 10) = TBC;
-  *(gpio + 0) = GPFSEL0_INPUT;
-  *(gpio + 1) = GPFSEL1_INPUT;
-  *(gpio + 2) = GPFSEL2_INPUT;
-  *(gpio + 7) = GPIOACT_LOW; // Set all "active low" outputs high (GPIO 6,10,12,15)
-  
+  *(gpio + 0) = GPFSEL0_OUTPUT;
+  *(gpio + 1) = GPFSEL1_OUTPUT;
+  *(gpio + 2) = GPFSEL2_OUTPUT;
+  *(gpio + 7) = GPIOACT_LOW; // Set all "active low" outputs high. 
 
 }
 
@@ -177,17 +181,22 @@ SET STEN low.
 */
 
 
-
+// These stay the same *but* we need to set the direction! 
 
 void setup_read() {
-// *(gpio + 0) = GPFSEL0_INPUT; // Just in case we change the pinout later!
+// *(gpio + 0) = GPFSEL0_INPUT; // These don't change normall but here just in case we change the pinout later!
    *(gpio + 1) = GPFSEL1_INPUT;
    *(gpio + 2) = GPFSEL2_INPUT;
+   *(gpio + 7) = 1 << DATAD; // Set DATAD to HIGH to set the databus to input
+
+
 }
 void setup_write() {
 // *(gpio + 0) = GPFSEL0_OUTPUT; // Just in case we change the pinout later!
    *(gpio + 1) = GPFSEL1_OUTPUT;
    *(gpio + 2) = GPFSEL2_OUTOUT;
+   *(gpio + 10) = 1 << DATAD; // Set DATAD to LOW to set the databus to output.
+
 }
 
 // A bunch of active low signals so to clear it we set it high

@@ -3,13 +3,10 @@
 /*
 Author      : David Sharp
 Date        : 24/09/2024
-Version     : 0.2
+Version     : 0.1
 Name        : PiDrive_gpio.h
 Description : Header file for the GPIO functionality of the CDTVPiDrive
 Notes       : Inspiration for as well as a chunk of this and the functionality taken from PiStorm. Thanks and attribution to the writers. 
-Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - fixed
-
-
 */
 
 /* Physical addresses range from 0x20000000 to 0x20FFFFFF for peripherals.
@@ -32,15 +29,15 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 #define GPIO_ADDR 0x200000 /* GPIO controller */
 #define GPCLK_ADDR 0x101000
 
-#define GPFSEL0_INPUT 0x01049900
-#define GPFSEL1_INPUT 0x24009041
-#define GPFSEL2_INPUT 0x00000021
+#define GPFSEL0_INPUT 0x08200249
+#define GPFSEL1_INPUT 0x00000208
+#define GPFSEL2_INPUT 0x00000000
 
-#define GPFSEL0_OUTPUT 0x01049900
-#define GPFSEL1_OUTPUT 0x24249041
-#define GPFSEL2_OUTPUT 0x00249261
+#define GPFSEL0_OUTPUT 0x08200249
+#define GPFSEL1_OUTPUT 0x00249208
+#define GPFSEL2_OUTPUT 0x00249240
 
-#define GPIOACT_LOW     0x00AB0800 // GPIO 6,10,12,15
+#define GPIOACT_LOW 
 
 #define GPFSEL_OUTPUT \
   *(gpio + 0) = GPFSEL0_OUTPUT; \
@@ -57,11 +54,11 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 
 // Reset
 #define CDRST 0
-// Subcode shift clock
+// Not used here... 
 #define SCCK 1
-// SPI data from U62 / LC6554. I think this is bidirectional
-#define SDATA 2
-// SPI clock. Unsure where this is generated. Probably at U62 / LC6554
+// DATA Direction. Sets output or input. High is input. Low is output.
+#define DATAD 2
+// Subcode shift clock
 #define SCK 3
 // Subcode EFM Frame Clock
 #define EFFK 4
