@@ -48,4 +48,18 @@ WIP
 ## Software
 
 Software is heavily inspired by the PiStorm efforts of bit-banging the GPIO of a Raspberry Pi.
-This repository contains the code I consider "largely complete" however it as yet has not been tested.
+This repository contains the code I consider "largely complete" however it as yet has not been tested. There is another private repo which contains the WIP code, this public repo will only be occasionally updated in comparison!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
