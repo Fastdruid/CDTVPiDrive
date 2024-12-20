@@ -3,13 +3,14 @@
 /*
 Author      : David Sharp
 Date        : 24/09/2024
-Version     : 0.2
+Version     : 0.4
 Name        : PiDrive_gpio.h
 Description : Header file for the GPIO functionality of the CDTVPiDrive
-Notes       : Inspiration for as well as a chunk of this and the functionality taken from PiStorm. Thanks and attribution to the writers. 
+Notes       : Inspiration for as well as a chunk of this and the functionality taken from PiStorm. Thanks and attribution to the writers.
 Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - fixed
-
-
+            : 28/10/2024 - MAX_N for nano_delay()
+            : 12/12/2024 - Changed GPFSEL0_* to change pin 4 from Output to Clock. Added CLK Passwd and Divider constants.
+            : 20/12/2024 - Copied in the GPIO Setup macros SET_GPIO_ALT.
 */
 
 /* Physical addresses range from 0x20000000 to 0x20FFFFFF for peripherals.
@@ -30,15 +31,37 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 #define BCM2708_PERI_SIZE 0x01000000  // Pi0-3
 
 #define GPIO_ADDR 0x200000 /* GPIO controller */
-#define GPCLK_ADDR 0x101000
+#define GPCLK_ADDR 0x101000 /* Clock */
 
-#define GPFSEL0_INPUT 0x01049900
+
+// #define GPCLK_BASE (BCM2708_PERI_BASE + 0x101000) /* Clock */
+// #define GPIO_BASE (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
+
+
+#define GPFSEL0_INPUT 0x0104C900
 #define GPFSEL1_INPUT 0x24009041
 #define GPFSEL2_INPUT 0x00000021
 
-#define GPFSEL0_OUTPUT 0x01049900
+#define GPFSEL0_OUTPUT 0x0104C900
 #define GPFSEL1_OUTPUT 0x24249041
 #define GPFSEL2_OUTPUT 0x00249261
+
+
+
+#define CLK_PASSWD 0x5a000000
+#define CLK_GP0_CTL 0x070
+#define CLK_GP0_DIV 0x074
+
+
+// GPIO setup macros. Always use INP_GPIO(x) before using OUT_GPIO(x) or
+// SET_GPIO_ALT(x,y)
+#define INP_GPIO(g) *(gpio + ((g) / 10)) &= ~(7 << (((g) % 10) * 3))
+#define OUT_GPIO(g) *(gpio + ((g) / 10)) |= (1 << (((g) % 10) * 3))
+#define SET_GPIO_ALT(g, a)  \
+  *(gpio + (((g) / 10))) |= \
+      (((a) <= 3 ? (a) + 4 : (a) == 4 ? 3 : 2) << (((g) % 10) * 3))
+
+
 
 #define GPIOACT_LOW     0x00AB0800 // GPIO 6,10,12,15
 
@@ -61,21 +84,21 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 #define SCCK 1
 // SPI data from U62 / LC6554. I think this is bidirectional
 #define SDATA 2
-// SPI clock. Unsure where this is generated. Probably at U62 / LC6554
+// SPI clock. Generated at U62 / LC6554
 #define SCK 3
 // Subcode EFM Frame Clock
 #define EFFK 4
-// Subcode sync 
+// Subcode sync
 #define SCOR 5
 // Unsure here what this does... maybe CD-Status?
 #define STCH 6
 // Enable drive
 #define ENABLE 7
-// WAIT! :) - Data ReQuest 
+// WAIT! :) - Data ReQuest
 #define DRQ 8
 // Host Data Write input
 #define HWR 9
-// DaTa ENable 
+// DaTa ENable
 #define DTEN 10
 // Host Data Read input
 #define HRD 11
@@ -85,7 +108,7 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 #define CMD 13
 // Subcode P-W serial data output
 #define SBCP 14
-// Unsure. Either eXternal Audio ENable or related to XTA AEN. 
+// Unsure. Either eXternal Audio ENable or related to XTA AEN.
 #define XAEN 15
 //Bidirectional Data bit 7
 #define DB7 16
@@ -112,3 +135,4 @@ Changes     : 25/10/2024 - Wrong register values for GPFSEL[0-2]_INPUT/OUTPUT - 
 //Bidirectional Data bit 0
 #define DB0 27
 
+#define MAX_N 999999999L
