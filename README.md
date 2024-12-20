@@ -8,7 +8,7 @@ This is an attempt to create a replacement drive for the CDTV that will allow ei
 
 ## Status
 
-WIP
+WIP - Writing the code to make it work. 
 
 ## Hardware
 
