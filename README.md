@@ -53,11 +53,13 @@ All change please!
 After significant discussion and investigation came to the conclusion that the Subcode was ultimately _far_ too important and there was no realistic way to syncronise it from the Pi without firing it blindly into the night...
 So instead this borrows even more from PiStorm and brings in a CPLD along with a flip/flop to latch the data. This then frees up a number of GPIO's that allows the Pi to communicate with the CPLD as well as external controls to change CD's etc. I'm thinking a rotary control similar to Gotek.
 
+#### Planned fixes/Changes
+1) Add CPLD
+2) Add Latch
+3) Add second GPIO header purely for development programming the CPLD (because I'm intending on using all the pins!)
+
 #### Status
 In design phase. 
-
-
-
 
 ## Software
 
