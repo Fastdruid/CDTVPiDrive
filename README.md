@@ -1,6 +1,7 @@
 # CDTVPiDrive
 
-![image](https://github.com/user-attachments/assets/433b4078-b0bd-4e89-8090-4b137aa7cca7)
+![image](https://github.com/user-attachments/assets/9f1face5-b214-4016-a570-5a85bd6087cb)
+
 
 ## About
 
