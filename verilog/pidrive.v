@@ -52,10 +52,11 @@ module pidrive(
     */
     input wire CE0, // Chip Select for SPI
     input wire SCLK, // SPI clock
+     // TBC - pin 64
     output wire MISO, // SPI output
     input wire MOSI, // SPI input
     /*
-    # TBC - pin 67
+  
     # TBC - pin 68
     # TBC - pin 69
     # TBC - pin 70
@@ -94,11 +95,12 @@ module pidrive(
 * ####################################################################################################################
 */
 
-// Detect falling edge of SCK
-wire sck_falling_edge = sck_prev & ~SCK;
-// SDATA direction control
-assign SDATA = sdata_dir ? u62_shift_reg[7] : 1'bz;
 
+// Detect falling edge of SCK
+    wire sck_falling_edge = sck_prev & ~SCK;
+
+// Tristate control for SDATA
+    assign SDATA = sdata_oe ? sdata_out : 1'bz;
 /*
 * ####################################################################################################################
 * #### PARAMETERS
@@ -122,12 +124,45 @@ assign SDATA = sdata_dir ? u62_shift_reg[7] : 1'bz;
 */
 
  // Commands thanks to chriskuta!
-    localparam [7:0] CMD_PLAY   = 8'b10000000;
-    localparam [7:0] CMD_STOP   = 8'b01100000;
-    localparam [7:0] CMD_REWIND = 8'b00100000;
-    localparam [7:0] CMD_FF     = 8'h01000000;
-    localparam [7:0] CMD_IDLE   = 8'b00001000;
+    localparam [7:0] FP_CMD_PLAY   = 8'b10000000;
+    localparam [7:0] FP_CMD_STOP   = 8'b01100000;
+    localparam [7:0] FP_CMD_REWIND = 8'b00100000;
+    localparam [7:0] FP_CMD_FF     = 8'h01000000;
+    localparam [7:0] FP_CMD_IDLE   = 8'b00001000;
 
+ // State machine states
+    localparam IDLE = 2'b00;
+    localparam RECEIVE = 2'b01;
+    localparam TRANSMIT = 2'b10;
+
+
+/*
+* Paramaters for the MKE command set
+*
+*/ 
+    localparam CMD_SEEK    = 8'h01;
+    localparam CMD_READ    = 8'h02;
+    localparam CMD_MOTORON = 8'h04;
+    localparam CMD_MOTOROF = 8'h05;
+    localparam CMD_PLAYLSN = 8'h09;
+    localparam CMD_PLAYMSF = 8'h0a;
+    localparam CMD_PLAYTRK = 8'h0b;
+    localparam CMD_STATUS  = 8'h81;
+    localparam CMD_CLRERR  = 8'h82;
+    localparam CMD_MODEL   = 8'h83;
+    localparam CMD_SETMODE = 8'h84;
+    localparam CMD_SUBQ    = 8'h87;
+    localparam CMD_INFO    = 8'h89;
+    localparam CMD_READTOC = 8'h8a;
+    localparam CMD_PAUSE   = 8'h8b;
+    localparam CMD_PANEL   = 8'ha3;
+     
+/*
+* Bonus commands... 
+* We'll put some cool stuff here so we can control things from the Amiga. :)
+*   localparam CMD_TBC   = 8'hxx;
+*
+*/
 
 
 /*
@@ -171,14 +206,13 @@ assign SDATA = sdata_dir ? u62_shift_reg[7] : 1'bz;
 */ 
 reg [7:0] FP_STATUS = 8'h00;   // Status register
 reg [7:0] FP_COMMAND = 8'h00;  // Command register
-// Internal signals
-reg [2:0] u62_bit_count = 3'b000;
-reg sdata_dir = 1'b0;       // 0 for input, 1 for output
-reg [7:0] u62_shift_reg = 8'h00;
+reg fp_disabled = 1'b0;       // Flag to disable command processing
+reg [1:0] u62_state = IDLE;
+reg [2:0] u62_bit_counter = 3'b000;
+reg [7:0] u62_shift_register = 8'b0;
 reg sck_prev = 1'b1;
-reg sdata_prev = 1'b1;
-
-
+reg sdata_out = 1'b0;
+reg sdata_oe = 1'b0;  // Output enable for SDATA
 
 /*
 * ####################################################################################################################
@@ -299,6 +333,57 @@ reg sdata_prev = 1'b1;
             end
         end
     end
+
+    always @(posedge PI_CLK) begin
+        sck_prev <= SCK;
+
+        case (u62_state)
+            IDLE: begin
+                if (sck_falling_edge) begin
+                    if (SDATA) begin
+                        u62_state <= TRANSMIT;
+                        sdata_oe <= 1'b1;
+                        u62_shift_register <= FP_STATUS;
+                    end else begin
+                        u62_state <= RECEIVE;
+                    end
+                    u62_bit_counter <= 0;
+                end
+            end
+
+            RECEIVE: begin
+                if (sck_falling_edge) begin
+                    u62_shift_register <= {u62_shift_register[6:0], SDATA};
+                    u62_bit_counter <= u62_bit_counter + 1;
+                    if (u62_bit_counter == 3'b111) begin
+                        u62_state <= IDLE;
+                        if (!fp_disabled) begin
+                            case ({u62_shift_register[6:0], SDATA})
+                                FP_CMD_PLAY:   FP_COMMAND <= FP_CMD_PLAY;
+                                FP_CMD_STOP:   FP_COMMAND <= FP_CMD_STOP;
+                                FP_CMD_REWIND: FP_COMMAND <= FP_CMD_REWIND;
+                                FP_CMD_FF:     FP_COMMAND <= FP_CMD_FF;
+                                default:       FP_COMMAND <= 8'h00; // Invalid command
+                            endcase
+                        end
+                    end
+                end
+            end
+
+            TRANSMIT: begin
+                if (sck_falling_edge) begin
+                    sdata_out <= u62_shift_register[7];
+                    u62_shift_register <= {u62_shift_register[6:0], 1'b0};
+                    u62_bit_counter <= u62_bit_counter + 1;
+                    if (u62_bit_counter == 3'b111) begin
+                        u62_state <= IDLE;
+                        sdata_oe <= 1'b0;
+                    end
+                end
+            end
+        endcase
+    end
+
 
 
 endmodule
