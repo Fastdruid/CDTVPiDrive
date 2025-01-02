@@ -7,7 +7,7 @@ SCOR is synced to the Sector, as there are 98 frames per sector this then runs a
 
 ![image](https://github.com/user-attachments/assets/282616fb-a77e-4455-ba26-271e813d1896)
 
-_*Note* t - Oscilationg frequency (VCO, typically 1/8.6436MHz = 115ns)_
+_*Note* t - Oscillating frequency (VCO, typically 1/8.6436MHz = 115ns)_
 
 
 SCCK is 8 pulses at CCK frequency (3.546895 MHz for PAL, 3.579545 MHz for NTSC). This clocks data via SBCP. Without SCCK then SBCP merely outputs the "P" Subcode (this is part of a parallel subcode interface, the other 7 bits are also output in parallel from the M50423FP). Normally SBCP outputs P and then the remaining bits of the subcode byte are clocked by SCCK.   
@@ -18,7 +18,7 @@ This shows how the data is clocked.
 
 ![image](https://github.com/user-attachments/assets/4953c02e-5d2b-439d-89a5-50b7e1cd2652)
 
-_*Note* t - Oscilationg frequency (VCO, typically 1/8.6436MHz = 115ns)_
+_*Note* t - Oscillating frequency (VCO, typically 1/8.6436MHz = 115ns)_
 
 
 Finally... WTF were Commodore thinking here? The M50423 has parallel subcode output, there is this horrible serial clock generator and serial to parallel converter where they could have saved ~6 chips by binning EFFK, SCCK and adding the parallel SBCW/V/U/T/S/R/Q. Ok, would have needed 5 extra pins on the connector but one is N/C (29), Mute isn't used and it wouldn't have been beyond the pale to make it a 44pin connector!
