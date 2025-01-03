@@ -5,7 +5,8 @@
 // Revision History
 /* v0.0.1 : 2025-02-01 : BRAND NEW! Its so *SHINY*! Its got all that "new code" smell and everything.
 *                      : Initial version creates EFFK & SCOR clocks as well as repads the I2S to 24 bit frames. 
-*
+*  v0.0.2 : 2025-02-01 : Initial version didn't correctly create the SCOR clock. Changed the logic and added a frame counter as this can be used for other things too.
+*                        Added (parameter) delay for SCOR, need to measure this accurately to configure it.
 *
 */ 
 
@@ -50,11 +51,11 @@ module pidrive(
     # TBC - pin 56
     # TBC - pin 57
     */
-    input wire CE0, // Chip Select for SPI
+    input wire CE0, // Chip Select for SPI - Active LOW!
     input wire SCLK, // SPI clock
      // TBC - pin 64
-    output wire MISO, // SPI output
-    input wire MOSI, // SPI input
+    output wire MISO, // Master In Slave Out
+    input wire MOSI, // Master Out Slave In
     /*
   
     # TBC - pin 68
@@ -107,6 +108,10 @@ module pidrive(
 * ####################################################################################################################
 */
 
+// Define HI and LO
+    localparam LO = 1'b0;
+    localparam HI = 1'b1;
+
 /*
 * Set some parameters for the clocks...
 * Note that this assumes a 200MHz clock from the Pi. This will *VARY* depending on Pi Model. Everything assumes a Pi3.  
@@ -114,10 +119,9 @@ module pidrive(
    
     parameter CLOCK_FREQ = 200_000_000;  // 200 MHz. 
     parameter EFFK_FREQ = 7_350;         // 7.35 kHz
-    parameter SCOR_FREQ = 75;            // 75 Hz
-    parameter SCOR_PULSE_WIDTH = 27200;  // 136 us * 200 MHz
-    parameter SCOR_DELAY = 980;          // 4900 ns * 200 MHz
-
+    parameter SCOR_FREQ = 98;            // Every 98 frames....
+    parameter CLOCK_CYCLE_TIME = 5 ;      // 5ns at 200MHz...
+    parameter SCOR_DELAY = 2000;          // Assuming a 10 μs delay and a clock cycle time of 5ns. 
 /*
 * Parameters for the front panel buttons.
 *
@@ -130,7 +134,7 @@ module pidrive(
     localparam [7:0] FP_CMD_FF     = 8'h01000000;
     localparam [7:0] FP_CMD_IDLE   = 8'b00001000;
 
- // State machine states
+ // State machine states for SPI comms
     localparam IDLE = 2'b00;
     localparam RECEIVE = 2'b01;
     localparam TRANSMIT = 2'b10;
@@ -171,6 +175,33 @@ module pidrive(
 * ####################################################################################################################
 */
 
+  reg [7:0] cd_status;  // Error status. 
+  /* Consists of these bits
+  
+  cd_isready = 0
+  cd_locked = 0
+  cd_playing = 0
+  cd_finished = 0
+  cd_error = 0
+  cd_motor = 0
+  cd_media = 0
+  cd_closed = 0
+
+  */
+
+
+
+/*
+* Registers for SPI
+*/
+
+    reg [7:0] spi_data_out;         // Data to send to the master (internal register)
+    reg [7:0] spi_data_in;          // Data received from the master 
+    reg [1:0] state, next_state;
+    reg [2:0] spi_bit_count;        // 3 bits to count 8 bits
+    reg [7:0] spi_shift_reg;        // Shift register for receiving data
+
+
 /*
 * Registers for I2S stuff...
 */
@@ -188,14 +219,16 @@ module pidrive(
     localparam EFFK_MAX = (CLOCK_FREQ / (2 * EFFK_FREQ)) - 1;  // TBC - Reconsider this if changing drive speed. 
     
     // Counter for SCOR
-    reg [20:0] scor_counter = 0;
-    localparam SCOR_MAX = (CLOCK_FREQ / SCOR_FREQ) - 1; // TBC - Reconsider this if changing drive speed. 
+    reg [7:0] scor_counter = 0;
 
+    // Frame Counter - Goes up to 98
+    reg [7:0] frame_counter = 0;
+     
     // SCOR pulse counter
     reg [14:0] scor_pulse_counter = 0;
 
     // SCOR delay counter
-    reg [9:0] scor_delay_counter = 0;
+    reg [10:0] scor_delay_counter = 0;
 
     // State for SCOR
     reg scor_state = 0;
@@ -216,6 +249,20 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
 
 /*
 * ####################################################################################################################
+* #### Tasks
+* ####################################################################################################################
+*/
+
+   
+/*
+* ####################################################################################################################
+* #### Functions
+* ####################################################################################################################
+*/
+
+
+/*
+* ####################################################################################################################
 * #### Initialisation
 * ####################################################################################################################
 */
@@ -223,8 +270,13 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
 
     // Initialise outputs
     initial begin
-        EFFK = 0;
-        SCOR = 0;
+        EFFK = 1'b0;
+        SCOR = 1'b0;
+        STEN = 1'b1;
+        DTEN = 1'b1;
+        DRQ = 1'b0;
+        EOP = 1'b1;
+        cd_status = 8'b00000000; // All status bits LOW on init
         /*
         * Enable outputs on all chips. 
         */
@@ -240,7 +292,9 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
         /*
         * Set direction on output chips
         */
-        DIR_OUT = 1;
+        DIR_OUT = 0;
+
+
 
     end
 
@@ -250,7 +304,6 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
 * #### Main body
 * ####################################################################################################################
 */
-
 
 
 /* 
@@ -293,46 +346,49 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
 * Create EFFK and SCOR based off the Pi Clock. 
 */ 
 
-
- always @(posedge PI_CLK) begin
-    /*
-    * Deal with commands from the front panel... 
-    */
-    
-        // EFFK generation
-        if (effk_counter == EFFK_MAX) begin
-            effk_counter <= 0;
-            EFFK <= ~EFFK;
-        end else begin
-            effk_counter <= effk_counter + 1;
-        end
-
-        // SCOR generation
-        if (scor_counter == SCOR_MAX) begin
-            scor_counter <= 0;
-            scor_state <= 1;
-            scor_delay_counter <= 0;
-        end else begin
-            scor_counter <= scor_counter + 1;
-        end
-
-        if (scor_state == 1) begin
-            if (scor_delay_counter == SCOR_DELAY - 1) begin
-                SCOR <= 1;
-                scor_pulse_counter <= 0;
-                scor_state <= 2;
-            end else begin
-                scor_delay_counter <= scor_delay_counter + 1;
+always @(posedge PI_CLK) begin
+    // EFFK generation
+    if (effk_counter == EFFK_MAX) begin
+        effk_counter <= 0;
+        EFFK <= ~EFFK;
+        // We're going to sync SCOR to EFFK every 98 frames. We start on a LOW signal because that's what has been seen on the 'scope.
+        
+        if (EFFK == HI) begin
+            if (frame_counter == 0) begin
+                scor_state <= HI;
+                frame_counter <= frame_counter + 1;
             end
-        end else if (scor_state == 2) begin
-            if (scor_pulse_counter == SCOR_PULSE_WIDTH - 1) begin
-                SCOR <= 0;
-                scor_state <= 0;
-            end else begin
-                scor_pulse_counter <= scor_pulse_counter + 1;
+            else if (frame_counter > 0 && frame_counter < 97) begin
+                scor_state <= LO;
+                frame_counter <= frame_counter + 1;
+            end
+            else if (frame_counter == 97) begin
+                frame_counter <= 0;
             end
         end
     end
+    else begin
+        if (effk_counter > SCOR_DELAY) begin
+           case (scor_state)
+              LO: begin
+                SCOR <= LO;
+              end
+              HI: begin
+                SCOR <= HI;
+              end
+            endcase
+        end  
+
+        effk_counter <= effk_counter + 1;
+    end
+end
+
+
+
+/*
+* Deal with the front panel commands and status. 
+*/
+
 
     always @(posedge PI_CLK) begin
         sck_prev <= SCK;
@@ -384,6 +440,27 @@ reg sdata_oe = 1'b0;  // Output enable for SDATA
         endcase
     end
 
+
+
+always @(posedge PI_CLK) begin
+        case (FP_COMMAND)
+            FP_CMD_PLAY: begin
+                // Add play functionality here
+            end
+            FP_CMD_STOP: begin
+                // Add stop functionality here
+            end
+            FP_CMD_REWIND: begin
+                // Add rewind functionality here
+            end
+            FP_CMD_FF: begin
+                // Add fast forward functionality here
+            end
+            default: begin
+                // Handle invalid command or do nothing
+            end
+        endcase
+    end
 
 
 endmodule
