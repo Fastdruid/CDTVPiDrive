@@ -2,8 +2,8 @@
 
 ## Notes
 
-EFFK is synced to the frame (7350 frames / second for a single speed CDROM) 7.35kHz while a CD is spinning, ~9.07kHz when its stopped/no CD, frequency dips as the CD spins up or seeks.   
-SCOR is synced to the Sector, as there are 98 frames per sector this then runs at 75Hz. In theory this is triggered by the synchronizing signal from the Subcode, either S0 or S1... in practice it turns up regardless of there being a CD in the drive!   
+EFFK is synced to the small frame (7350 small frames / second for a single speed CDROM) 7.35kHz while a CD is spinning, ~9.07kHz when its stopped/no CD, frequency dips as the CD spins up or seeks.   
+SCOR is synced to the Sector, as there are 98 small frames per sector this then runs at 75Hz. In theory this is triggered by the synchronizing signal from the Subcode, either S0 or S1... in practice it turns up regardless of there being a CD in the drive!   
 
 ![image](https://github.com/user-attachments/assets/282616fb-a77e-4455-ba26-271e813d1896)
 
