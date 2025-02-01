@@ -84,17 +84,34 @@ This isn't something the Pi Supports. So the I2S now goes via the CPLD. This wil
 #### Status
 Partly designed but abandoned. 
 
-### Rev 0.6
+### Rev 0.6A
 
-Not massively functionally different to rev 0.5 however changed to fit the video card slot. It's not _required_ to use the slot, a power header is also included but. 
+Not massively functionally different to rev 0.5 however changed to fit the video card slot. It's not _required_ to use the slot, a power header is also included but the video slot is a convenient place for it.. 
 
-#### Planned fixes/Changes
+#### Known Issues
+1) Missed two grounds off.
+2) Without a backplate it is almost impossible to remove from the CDTV!
+
+#### Changes
 1) Change to Video Card Slot format.
 2) Route IN/CD via level-shifter into CPLD.
 3) Add individual OE control to each of the level-shifters. 
+4) Used EPM570 rather than EPM240 due to being unsure how many LUT's I'd use!
 
 #### Status
-In design phase.
+Built
+
+### Rev 0.6B
+
+Minor revision merely to fix missing grounds.
+
+#### Planned fixes/Changes
+1) Fix grounds.
+   
+#### Status
+Designed. 
+
+
 
 ## Software
 
