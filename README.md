@@ -8,7 +8,7 @@ This is an attempt to create a replacement drive for the CDTV that will allow ei
 
 ## Status
 
-WIP - Re-designing the board.
+WIP - First successful boot has happened! 
 
 ## Hardware
 
