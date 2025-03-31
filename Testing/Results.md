@@ -48,7 +48,7 @@ Timings/widths are given here
 
 ![image](https://github.com/user-attachments/assets/47589915-422d-4cd1-be50-7d8ad74e5b69)
 
-
+The return data from the drive to U62 seems merely to be the track number. 
 
 
 
