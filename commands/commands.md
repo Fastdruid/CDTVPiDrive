@@ -127,11 +127,11 @@ Nothing
 Due to the way the PiDrive works the CPLD sends the front panel commands to the Pi the same way as the existing commands, these commands therefore have been slotted into the same sequence. 
 #### Options ####
 ##### Byte 1 - Button code #####
-0x08 (00001000) which represents TRACK
-0x60 (01100000) which represents STOP 
-0x80 (10000000) which represents PLAY 
-0x20 (00100000) which represents REW  
-0x40 (01000000) which represents FF   
+0x08 (00001000) which represents TRACK  
+0x60 (01100000) which represents STOP   
+0x80 (10000000) which represents PLAY   
+0x20 (00100000) which represents REW    
+0x40 (01000000) which represents FF     
 ##### Byte 2-6 #####
 N/A
 #### Returns ####
