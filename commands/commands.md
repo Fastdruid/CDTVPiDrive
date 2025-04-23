@@ -9,6 +9,13 @@ All commands except one are 7 bytes in length. The one exception being 0x81 whic
 Some of this has been gathered from a Logic Analyser on the drive, some from WinUAE, some from C4ptFuture and his work on reverse engineering CDTV OS. Thanks go to everyone who has contributed, named or otherwise. 
 
 ## Original ##
+### 0x00 - Checkpath ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
+
 ### 0x01 - Seek ###
 #### Description ####
 As a CD-ROM is relatively slow and can taking a second or so to get from one location to another on a drive this command exists to move the head before reading. 
@@ -23,6 +30,13 @@ This command reads data from the drive.
 #### Returns ####
 Data. 
 
+### 0x03 - Header ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
+
 ### 0x04 - Motor On ###
 #### Description ####
 This command starts the motor
@@ -36,6 +50,24 @@ This command stops the motor
 #### Options ####
 #### Returns ####
 Nothing
+
+### 0x06 - Diagnostic ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
+### 0x07 - UPC ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
+### 0x08 - ISRC ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
 
 ### 0x09 - Play Audio (LSN) ###
 #### Description ####
@@ -56,6 +88,12 @@ Nothing
 Play Audio using track/index
 #### Options ####
 #### Returns ####
+
+### 0x0C - Play XA ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
 
 ### 0x81 - Status ###
 #### Description ####
@@ -86,12 +124,30 @@ Sets the sector size.
 #### Returns ####
 Nothing
 
+### 0x85 - Model sense ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
+### 0x86 - Capacity ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
 ### 0x87 - Subcode Q enquiry ###
 #### Description ####
 Basically returns where on the CD the head is, what the drive is doing and what type of track its reading.
 #### Options ####
 #### Returns ####
 13 bytes
+
+### 0x88 - Diskcode ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
 
 ### 0x89 - Volume Summary ###
 #### Description ####
@@ -114,6 +170,12 @@ Pause or unpause audio
 #### Returns ####
 Nothing
 
+### 0xA2 - XAPARMS ###
+#### Description ####
+#### Options ####
+#### Returns ####
+Unsure. Not seen this yet.
+
 ### 0xA3 - Disable FP ###
 #### Description ####
 Disables or enables the front panel controls. 
@@ -122,6 +184,8 @@ Disables or enables the front panel controls.
 Nothing
 
 ## New ##
+
+TBC - change this one as 0xA2 is in use!
 ### 0xA2 - FP Command ###
 #### Description ####
 Due to the way the PiDrive works the CPLD sends the front panel commands to the Pi the same way as the existing commands, these commands therefore have been slotted into the same sequence. 
@@ -136,4 +200,3 @@ Due to the way the PiDrive works the CPLD sends the front panel commands to the 
 N/A
 #### Returns ####
 N/A
-
