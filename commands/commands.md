@@ -11,6 +11,7 @@ Some of this has been gathered from a Logic Analyser on the drive, some from Win
 ## Original ##
 ### 0x00 - Checkpath ###
 #### Description ####
+This is a newly discovered command for which there are currently no details. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -32,6 +33,7 @@ Data.
 
 ### 0x03 - Header ###
 #### Description ####
+This is a newly discovered command for which there are currently no details. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -53,18 +55,21 @@ Nothing
 
 ### 0x06 - Diagnostic ###
 #### Description ####
+This is a newly discovered command for which there are currently no details....but its presumed it performs some kind of diagnostics. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
 
 ### 0x07 - UPC ###
 #### Description ####
+This is a newly discovered command for which there are currently no details however its presumed it returns the UPC. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
 
 ### 0x08 - ISRC ###
 #### Description ####
+This is a newly discovered command for which there are currently no details however its presumed it returns the ISRC.
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -91,6 +96,7 @@ Play Audio using track/index
 
 ### 0x0C - Play XA ###
 #### Description ####
+This is a newly discovered command for which there are currently no details. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -124,14 +130,16 @@ Sets the sector size.
 #### Returns ####
 Nothing
 
-### 0x85 - Model sense ###
+### 0x85 - Mode sense ###
 #### Description ####
+This is a newly discovered command for which there are currently no details however its presumed it either returns the current mode *or* it returns what mode it should be. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
 
 ### 0x86 - Capacity ###
 #### Description ####
+This is a newly discovered command for which there are currently no details....but returns the size of the CD?
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -145,6 +153,7 @@ Basically returns where on the CD the head is, what the drive is doing and what 
 
 ### 0x88 - Diskcode ###
 #### Description ####
+This is a newly discovered command for which there are currently no details.... genuinely no idea on this one. 
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -172,6 +181,7 @@ Nothing
 
 ### 0xA2 - XAPARMS ###
 #### Description ####
+This is a newly discovered command for which there are currently no details... presumably related to Play XA
 #### Options ####
 #### Returns ####
 Unsure. Not seen this yet.
@@ -186,7 +196,7 @@ Nothing
 ## New ##
 
 TBC - change this one as 0xA2 is in use!
-### 0xA2 - FP Command ###
+### 0xA4 - FP Command ###
 #### Description ####
 Due to the way the PiDrive works the CPLD sends the front panel commands to the Pi the same way as the existing commands, these commands therefore have been slotted into the same sequence. 
 #### Options ####
