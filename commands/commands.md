@@ -11,10 +11,10 @@ Some of this has been gathered from a Logic Analyser on the drive, some from Win
 ## Original ##
 ### 0x00 - Checkpath ###
 #### Description ####
-This is a newly discovered command for which there are currently no details. 
+There are very few details on this but I believe this is a diagnostic command that checks the data path. 
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+Two bytes. Unsure what they represent but 0xAA 0x55 indicates everything is good. 
 
 
 ### 0x01 - Seek ###
@@ -55,10 +55,12 @@ Nothing
 
 ### 0x06 - Diagnostic ###
 #### Description ####
-This is a newly discovered command for which there are currently no details....but its presumed it performs some kind of diagnostics. 
+This is a newly discovered command for which there are currently no details....but its presumed it performs some kind of diagnostics.  
+I believe this can run a series of tests however only one is known at this stage. 
 #### Options ####
+0x80 - Performs a seek test. 
 #### Returns ####
-Unsure. Not seen this yet.
+Nothing. The output appears to merely be in the success (or otherwise) of the status byte. 
 
 ### 0x07 - UPC ###
 #### Description ####
