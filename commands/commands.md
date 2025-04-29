@@ -36,7 +36,7 @@ Data.
 This is a newly discovered command for which there are currently no details. 
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+With options set to 0x00 it does not return any data.
 
 
 ### 0x04 - Motor On ###
@@ -99,9 +99,17 @@ Play Audio using track/index
 ### 0x0C - Play XA ###
 #### Description ####
 This is a newly discovered command for which there are currently no details. 
+This does "something" when run but nothing is returned. 
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+Nothing seems to be returned. 
+
+### 0x80 - Checkpath ###
+#### Description ####
+There are very few details on this but I believe this is a diagnostic command that checks the data path. This appears to be a repeat of the version at 0x00. 
+#### Options ####
+#### Returns ####
+Two bytes. Unsure what they represent but 0xAA 0x55 indicates everything is good. 
 
 ### 0x81 - Status ###
 #### Description ####
@@ -137,14 +145,14 @@ Nothing
 This is a newly discovered command for which there are currently no details however its presumed it either returns the current mode *or* it returns what mode it should be. 
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+Two bytes which match the sector size. Unsure if this is what is set or what is detected. 
 
 ### 0x86 - Capacity ###
 #### Description ####
 This is a newly discovered command for which there are currently no details....but returns the size of the CD?
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+Returns 5 bytes. The first three bytes are the number of data sectors and the last two bytes are the sector size. So as an example a disc with 25,546,752 bytes on and 2048 byte sectors would report as "0x00 0x30 0xBA 0x08 0x00"
 
 ### 0x87 - Subcode Q enquiry ###
 #### Description ####
@@ -158,7 +166,7 @@ Basically returns where on the CD the head is, what the drive is doing and what 
 This is a newly discovered command for which there are currently no details.... genuinely no idea on this one. 
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+14 bytes. Unsure what exactly this is, all discs tried so far just report 0. 
 
 ### 0x89 - Volume Summary ###
 #### Description ####
@@ -186,7 +194,7 @@ Nothing
 This is a newly discovered command for which there are currently no details... presumably related to Play XA
 #### Options ####
 #### Returns ####
-Unsure. Not seen this yet.
+4 Bytes. Unsure what exactly this is, all discs tried so far just report 0. 
 
 ### 0xA3 - Disable FP ###
 #### Description ####
