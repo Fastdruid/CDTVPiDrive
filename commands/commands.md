@@ -4,7 +4,7 @@ As any arbitary command can be run from the Amiga and the program on the Pi can 
 The intention is to allow anything "different" to run a script or program on the Pi. To avoid multiple people doing different stuff I want to keep this as being the single source of new commands. If anyone wants a new command for any reason raise an issue and I'll add a "command" in here for it (along with a link if you desire to a repo etc). 
 # Notes #
 
-All commands except one are 7 bytes in length. The one exception being 0x81 which is a single byte command. The first byte being the command itself followed by 6 bytes that are the options to that command.  
+All original commands except one are 7 bytes in length. The one exception being 0x81 which is a single byte command. The first byte being the command itself followed by 6 bytes that are the options to that command.  While it turns out the CDTV can send an arbitary length command at the moment the code on the CPLD only allows 7 bytes so until this changes this will remain the limit.
 
 Some of this has been gathered from a Logic Analyser on the drive, some from WinUAE, some from C4ptFuture and his work on reverse engineering CDTV OS. Thanks go to everyone who has contributed, named or otherwise. 
 
@@ -86,19 +86,57 @@ Returns 5 bytes. The first three bytes are the number of data sectors and the la
 ### 0xA3 - Disable FP ###
 
 ## New ##
+This section describes commands that are not valid on an original drive. They should not be used without a PiDrve as unexpected results may occur! 
 
-TBC - change this one as 0xA2 is in use!
+| Command Name | Command Byte | Byte 1 | Byte 2 | Byte 3 | Byte 4 | Byte 5 | Byte 6 | Returns | Description |
+| --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| FP Command | 0xa4 | 0x80 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel PLAY Pressed |
+| FP Command | 0xa4 | 0x60 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel STOP Pressed |
+| FP Command | 0xa4 | 0x40 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel FF Pressed |
+| FP Command | 0xa4 | 0x20 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel REW Pressed |
+| FP Command | 0xa4 | 0x08 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel Requested current Track |
+| --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| ODE Command | 0xcd | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return how many CD images are currently indexed |
+| ODE Command | 0xcd | 0x01 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Refresh / rescan directory for new CD Images |
+| ODE Command | 0xcd | 0x02 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Load CD with ID the ID given (use ID 0xffff to eject *without* loading a new CD).|
+| ODE Command | 0xcd | 0x03 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return the current loaded CD ID |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | 1 byte | Return the position of the CD with the ID given in the "quick list" |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | Position | 0x00 | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
+| ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 || Nothing | Reset the sort order |
+| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | length | 0x00 | variable bytes | Returns the first "length" bytes of the filename of the CD image. |
+| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | length | 0x00 | variable bytes | Returns the first "length" bytes of the path of the CD image. |
+| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image. |
+| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | 0x00 | 0x00 | 1 bytes | Returns the catagory of the CD image. |
+
+
+
 ### 0xA4 - FP Command ###
 #### Description ####
 Due to the way the PiDrive works the CPLD sends the front panel commands to the Pi the same way as the existing commands, these commands therefore have been slotted into the same sequence. 
 #### Options ####
 ##### Byte 1 - Button code #####
-0x08 (00001000) which represents TRACK  
-0x60 (01100000) which represents STOP   
-0x80 (10000000) which represents PLAY   
-0x20 (00100000) which represents REW    
-0x40 (01000000) which represents FF     
-##### Byte 2-6 #####
-N/A
-#### Returns ####
-N/A
+* 0x80 (10000000) which represents PLAY   
+* 0x60 (01100000) which represents STOP   
+* 0x40 (01000000) which represents FF
+* 0x20 (00100000) which represents REW    
+* 0x08 (00001000) which represents TRACK  
+
+### 0xA4 - ODE Command ###
+#### Description ####
+This commands allows control of the underlying CD handling from the OS. 
+CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "special" reflecting the ODE & Settings CD and "no CD" respectively. 
+
+##### Byte 1 - Sub-Command #####
+* 0x00 - Give a count of current CD images. Two bytes up to 0xfffe (65534)
+* 0x01 - Refresh the directory searched for images. For use if you've just uploaded something new.
+* 0x02 - Load a CD (if to reboot or not is handled by the program calling this).
+* 0x03 - Return the ID of the currently loaded CD.
+* 0x04 - Return the position in the "quick list" of the CD with the given ID.
+* 0x05 - set the position in the custom list for the disc with id given by byte 2 & 3 and position by byte 4. Note that to prevent duplicates this will *remove* the already existing CD from that "slot".
+* 0x06 - reset the custom list to default sort order (in ID order) 
+##### Byte 2 - first byte of disc UID #####
+##### Byte 3 - Second byte of disc UID #####
+##### Byte 4 - Position in custom list #####
+
+
+
