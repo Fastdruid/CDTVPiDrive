@@ -143,7 +143,7 @@ CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "sp
 #### Description ####
 This command is purely for data transfer. It will transfer up to 65535 Words (4 byte words) for a total of ~256kb. Overhead is somewhat hefty here... 3+2 bytes overhead for every 4 bytes sent! Still I think we could probably get acceptable throughput. 
 When sending text then a 0x02 (EOT) should be used as End Of Text :) 
-When sending data then the previous command will set 
+When sending data then the previous command will specify how many bytes...somehow. :)
 ##### Byte 1 - Word byte 1 #####
 ##### Byte 2 - Word byte 2 #####
 ##### Byte 3 - Data byte 0 #####
