@@ -9,199 +9,81 @@ All commands except one are 7 bytes in length. The one exception being 0x81 whic
 Some of this has been gathered from a Logic Analyser on the drive, some from WinUAE, some from C4ptFuture and his work on reverse engineering CDTV OS. Thanks go to everyone who has contributed, named or otherwise. 
 
 ## Original ##
+
+Where MSF/LSN is given MSF = 0x02, LSN = 0x00
+
+| Command Name | Command Byte | Byte 1 | Byte 2 | Byte 3 | Byte 4 | Byte 5 | Byte 6 | Returns | Description |
+| --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
+| Checkpath | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 Bytes | There are very few details on this but I believe this is a diagnostic command that checks the data path. |
+| Seek | 0x01 | Sector | Sector | Sector | 0x00 | 0x00 | 0x00 | Nothing | As a CD-ROM is relatively slow and can taking a second or so to get from one location to another on a drive this command exists to move the head before reading. |
+| Read | 0x02 | Sector | Sector | Sector | Length | Length | 0x00 | Data :) | This command reads data from the drive, it sends a 24 bit number reflecting the start sector and a 16 bit number reflecting the number of sectors to return |
+| Header | 0x03 |  UNK | UNK | UNK | UNK | UNK | UNK | Unknown | Unknown |
+| Motor On | 0x04 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Turns the motor on |
+| Motor Off | 0x05| 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Turns the motor off |
+| Diagnostic | 0x06 | 0x80 - Seek test, 0x81 - Long Seek test | UNK | UNK | UNK | UNK | UNK | Nothing - Check for errors after | Performs Diagnostics. Only test known is the seek test. |
+| UPC | 0x07 | UNK | UNK | UNK | UNK | UNK | UNK | Unknown | Unknown |
+| ISRC | 0x08 | UNK | UNK | UNK | UNK | UNK | UNK | Unknown | Unknown |
+| Play (LSN) | 0x09 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing - Plays audio | Plays Audio by using LSN references |
+| Play (MSF) | 0x0a | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing - Plays audio | Plays Audio by using MSF references |
+| Play (track) | 0x0b | start track | start index | end track | end index | 0x00 | 0x00 | Nothing - Plays audio | Plays Audio by track |
+| Play XA | 0x0c | UNK | UNK | UNK | UNK | UNK | UNK | Unknown | Unknown |
+| Checkpath | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 Bytes | There are very few details on this but I believe this is a diagnostic command that checks the data path. |
+| Status | 0x81 | | | | | | | 1 byte | The only single byte command! Requests a status byte from the drive. |
+| Read / Reset Error | 0x82 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 6 bytes | Reads and then resets the error status. |
+| Model name | 0x83 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 12 bytes | Returns Model and version, MATSHITA0.96 or MATSHITA0.97 on an original drive. |
+| Select Mode | 0x84 | ?? | sector size | sector size | 0x00 | ?? | 0x00 | Nothing | Sets the sector size, valid sizes are 256, 512, 1024, 2048, 2052, 2336, 2340.|
+| Modesense | 0x85 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Returns the current mode size set. |
+| Capacity | 0x86 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 5 bytes | Returns the disc size, first three bytes are the number of sectors, next two are the sector size. |
+| SubQ | 0x87 | MSF/LSN | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 13 bytes | Returns audio playback status, control data and current LSN or MSF position |
+| Diskcode | 0x88 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 14 bytes | Unknown, all the discs I have tested return 14 zeros |
+| Diskinfo | 0x89 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 5 bytes | Returns a disc summary, returns first track, last track, m,s,f of the lead out |
+| Read TOC | 0x8a | MSF/LSN | Track | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 8 bytes | Returns Q channel info, Track number and position of the track in the requested format (MSF/LSN) |
+| Pause | 0x8b | Pause (0x80) / Unpause (0x00) |  0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Pauses / Unpauses audio. Bug in the original hardware which means it does not pause audio started from the front panel! |
+| Packet | 0x8C | Number of bytes returned, 0x00 = 256 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | up to 256 bytes | Unknown what this is | 
+| XD Params | 0xa2 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 4 bytes | Unknown, all the discs I have tested return 4 zeros |
+| Front Panel | 0xa3 | Enable (0x20) / Disable (0x00) | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Enables or Disables the front panel controls. Note that despite the documentation the front panel buttons send keycodes at all times!| 
+
 ### 0x00 - Checkpath ###
-#### Description ####
-There are very few details on this but I believe this is a diagnostic command that checks the data path. 
-#### Options ####
-#### Returns ####
 Two bytes. Unsure what they represent but 0xAA 0x55 indicates everything is good. 
-
-
-### 0x01 - Seek ###
-#### Description ####
-As a CD-ROM is relatively slow and can taking a second or so to get from one location to another on a drive this command exists to move the head before reading. 
-#### Options ####
-#### Returns ####
-Unsure. Not seen this yet.
-
-### 0x02 - Read ###
-#### Description ####
-This command reads data from the drive. 
-#### Options ####
-#### Returns ####
-Data. 
-
 ### 0x03 - Header ###
-#### Description ####
-This is a newly discovered command for which there are currently no details. 
-#### Options ####
-#### Returns ####
 With options set to 0x00 it does not return any data.
-
-
-### 0x04 - Motor On ###
-#### Description ####
-This command starts the motor
-#### Options ####
-#### Returns ####
-Nothing
-
-### 0x05 - Motor Off ###
-#### Description ####**
-This command stops the motor
-#### Options ####
-#### Returns ####
-Nothing
-
-### 0x06 - Diagnostic ###
-#### Description ####
-This is a newly discovered command for which there are currently no details....but its presumed it performs some kind of diagnostics.  
-I believe this can run a series of tests however only one is known at this stage. 
-#### Options ####
-0x80 - Performs a seek test. 
-#### Returns ####
-Nothing. The output appears to merely be in the success (or otherwise) of the status byte. 
-
-### 0x07 - UPC ###
-#### Description ####
-This is a newly discovered command for which there are currently no details however its presumed it returns the UPC. 
-#### Options ####
-#### Returns ####
-Unsure. Not seen this yet.
-
-### 0x08 - ISRC ###
-#### Description ####
-This is a newly discovered command for which there are currently no details however its presumed it returns the ISRC.
-#### Options ####
-#### Returns ####
-Unsure. Not seen this yet.
-
-### 0x09 - Play Audio (LSN) ###
-#### Description ####
-Play Audio using LSN addressing.
-#### Options ####
-#### Returns ####
-Nothing
-
-### 0x0A - Play Audio (MSF) ###
-#### Description ####
-Play Audio using MSF addressing
-#### Options ####
-#### Returns ####
-Nothing
-
-### 0x0B - Play Audio (track) ###
-#### Description ####
-Play Audio using track/index
-#### Options ####
-#### Returns ####
-
 ### 0x0C - Play XA ###
-#### Description ####
-This is a newly discovered command for which there are currently no details. 
-This does "something" when run but nothing is returned. 
-#### Options ####
-#### Returns ####
 Nothing seems to be returned. 
 
 ### 0x80 - Checkpath ###
-#### Description ####
-There are very few details on this but I believe this is a diagnostic command that checks the data path. This appears to be a repeat of the version at 0x00. 
-#### Options ####
-#### Returns ####
 Two bytes. Unsure what they represent but 0xAA 0x55 indicates everything is good. 
 
 ### 0x81 - Status ###
-#### Description ####
-Return the status byte. Note that this is the only (known) single byte command.
-#### Options ####
-None
-#### Returns ####
 Single byte of status
 
 ### 0x82 - Read/Clear Errors ###
-#### Description ####
-Reads any errors and resets the error bit.
-#### Options ####
-#### Returns ####
 6 bytes of Error code
 
 ### 0x83 - Model Name ###
-#### Description ####
-Returns the model name.
-#### Options ####
-#### Returns ####
 Model name. Unsure if this has a fixed size
 
-### 0x84 - Set Sector size ###
-#### Description ####
-Sets the sector size. 
-#### Options ####
-#### Returns ####
-Nothing
-
 ### 0x85 - Mode sense ###
-#### Description ####
-This is a newly discovered command for which there are currently no details however its presumed it either returns the current mode *or* it returns what mode it should be. 
-#### Options ####
-#### Returns ####
 Two bytes which match the sector size. Unsure if this is what is set or what is detected. 
 
 ### 0x86 - Capacity ###
-#### Description ####
-This is a newly discovered command for which there are currently no details....but returns the size of the CD?
-#### Options ####
-#### Returns ####
 Returns 5 bytes. The first three bytes are the number of data sectors and the last two bytes are the sector size. So as an example a disc with 25,546,752 bytes on and 2048 byte sectors would report as "0x00 0x30 0xBA 0x08 0x00"
 
 ### 0x87 - Subcode Q enquiry ###
-#### Description ####
-Basically returns where on the CD the head is, what the drive is doing and what type of track its reading.
-#### Options ####
-#### Returns ####
 13 bytes
 
 ### 0x88 - Diskcode ###
-#### Description ####
-This is a newly discovered command for which there are currently no details.... genuinely no idea on this one. 
-#### Options ####
-#### Returns ####
 14 bytes. Unsure what exactly this is, all discs tried so far just report 0. 
 
 ### 0x89 - Volume Summary ###
-#### Description ####
-Returns a short summary of the CD, first track, last track and how long the CD is.
-#### Options ####
-#### Returns ####
 5 bytes
 
 ### 0x8A - Track Summary ###
-#### Description ####
-Returns type of track, track number and sector position (either LSN or MSF depending on options).
-#### Options ####
-#### Returns ####
 8 Bytes
 
-### 0x8B - Pause ###
-#### Description ####
-Pause or unpause audio
-#### Options ####
-#### Returns ####
-Nothing
-
 ### 0xA2 - XAPARMS ###
-#### Description ####
-This is a newly discovered command for which there are currently no details... presumably related to Play XA
-#### Options ####
-#### Returns ####
 4 Bytes. Unsure what exactly this is, all discs tried so far just report 0. 
 
 ### 0xA3 - Disable FP ###
-#### Description ####
-Disables or enables the front panel controls. 
-#### Options ####
-#### Returns ####
-Nothing
 
 ## New ##
 
