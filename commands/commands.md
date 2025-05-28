@@ -38,10 +38,10 @@ Where MSF/LSN is given MSF = 0x02, LSN = 0x00
 | Diskcode | 0x88 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 14 bytes | Unknown, all the discs I have tested return 14 zeros |
 | Diskinfo | 0x89 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 5 bytes | Returns a disc summary, returns first track, last track, m,s,f of the lead out |
 | Read TOC | 0x8a | MSF/LSN | Track | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 8 bytes | Returns Q channel info, Track number and position of the track in the requested format (MSF/LSN) |
-| Pause | 0x8b | Pause (0x80) / Unpause (0x00) |  0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Pauses / Unpauses audio. Bug in the original hardware which means it does not pause audio started from the front panel! |
-| Packet | 0x8C | Number of bytes returned, 0x00 = 256 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | up to 256 bytes | Unknown what this is | 
-| XD Params | 0xa2 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 4 bytes | Unknown, all the discs I have tested return 4 zeros |
-| Front Panel | 0xa3 | Enable (0x20) / Disable (0x00) | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Enables or Disables the front panel controls. Note that despite the documentation the front panel buttons send keycodes at all times!| 
+| Pause | 0x8b | Pause (0x80) / Unpause (0x00) |  0x00 | 0x00 | 0x00 | 0x00 | 0x00 |  Nothing | Pauses / Unpauses audio. Bug in the original hardware which means it does not pause audio started from the front panel! |
+| Packet | 0x8C | Number of bytes returned, 0x00 = 256 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 |  up to 256 bytes | Unknown what this is | 
+| XD Params | 0xa2 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 4 bytes | Unknown, all the discs I have tested return 4 zeros |
+| Front Panel | 0xa3 | Enable (0x20) / Disable (0x00) | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 |  Nothing | Enables or Disables the front panel controls. Note that despite the documentation the front panel buttons send keycodes at all times!| 
 
 ### 0x00 - Checkpath ###
 Two bytes. Unsure what they represent but 0xAA 0x55 indicates everything is good. 
