@@ -96,12 +96,12 @@ This section describes commands that are not valid on an original drive. They sh
 | FP Command | 0xa4 | 0x20 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel REW Pressed |
 | FP Command | 0xa4 | 0x08 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel Requested current Track |
 | ODE Command | 0xcd | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return how many CD images are currently indexed |
-| ODE Command | 0xcd | 0x01 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Refresh / rescan directory for new CD Images |
+| ODE Command | 0xcd | 0x01 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Refresh & rescan directory for new CD Images |
 | ODE Command | 0xcd | 0x02 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Load CD with ID the ID given (use ID 0xffff to eject *without* loading a new CD).|
 | ODE Command | 0xcd | 0x03 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return the current loaded CD ID |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | 1 byte | Return the position of the CD with the ID given in the "quick list" |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | Position | 0x00 | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
-| ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 || Nothing | Reset the sort order |
+| ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Reset the sort order |
 | ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | length | 0x00 | variable bytes | Returns the first "length" bytes of the filename of the CD image. |
 | ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | length | 0x00 | variable bytes | Returns the first "length" bytes of the path of the CD image. |
 | ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image. |
