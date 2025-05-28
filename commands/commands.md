@@ -100,12 +100,13 @@ This section describes commands that are not valid on an original drive. They sh
 | ODE Command | 0xcd | 0x02 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Load CD with ID the ID given (use ID 0xffff to eject *without* loading a new CD).|
 | ODE Command | 0xcd | 0x03 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return the current loaded CD ID |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | 1 byte | Return the position of the CD with the ID given in the "quick list" |
-| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | Position | 0x00 | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | length | 0x00 | variable bytes | Returns the first "length" bytes of the filename of the CD image with the ID given. |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | length | 0x00 | variable bytes | Returns the first "length" bytes of the path of the CD image with the ID given. |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image with the ID given. |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | 0x00 | 0x00 | 1 bytes | Returns the catagory of the CD image. |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | Position | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | Catagory | 0x00 | Nothing | Set the Catagory of the CD with the ID given to "Catagory". |
 | ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Reset the sort order |
-| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | length | 0x00 | variable bytes | Returns the first "length" bytes of the filename of the CD image. |
-| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | length | 0x00 | variable bytes | Returns the first "length" bytes of the path of the CD image. |
-| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image. |
-| ODE Command | 0xcd | 0x07 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | 0x00 | 0x00 | 1 bytes | Returns the catagory of the CD image. |
 
 
 
@@ -120,7 +121,7 @@ Due to the way the PiDrive works the CPLD sends the front panel commands to the 
 * 0x20 (00100000) which represents REW    
 * 0x08 (00001000) which represents TRACK  
 
-### 0xA4 - ODE Command ###
+### 0xCD - ODE Command ###
 #### Description ####
 This commands allows control of the underlying CD handling from the OS. 
 CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "special" reflecting the ODE & Settings CD and "no CD" respectively. 
@@ -130,12 +131,9 @@ CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "sp
 * 0x01 - Refresh the directory searched for images. For use if you've just uploaded something new.
 * 0x02 - Load a CD (if to reboot or not is handled by the program calling this).
 * 0x03 - Return the ID of the currently loaded CD.
-* 0x04 - Return the position in the "quick list" of the CD with the given ID.
-* 0x05 - set the position in the custom list for the disc with id given by byte 2 & 3 and position by byte 4. Note that to prevent duplicates this will *remove* the already existing CD from that "slot".
-* 0x06 - reset the custom list to default sort order (in ID order) 
-##### Byte 2 - first byte of disc UID #####
-##### Byte 3 - Second byte of disc UID #####
-##### Byte 4 - Position in custom list #####
+* 0x04 - Return information on the CD image with given ID from the internal database.
+* 0x05 - Update the internal database.
+* 0x06 - reset the custom list to default sort order (in ID order)
 
 
 
