@@ -95,6 +95,16 @@ This section describes commands that are not valid on an original drive. They sh
 | FP Command | 0xa4 | 0x40 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel FF Pressed |
 | FP Command | 0xa4 | 0x20 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel REW Pressed |
 | FP Command | 0xa4 | 0x08 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel Requested current Track |
+| Internet Command | 0xc0 | 0x00 | [type] | 0x00 | 0x00 | 0x00 | 0x00 | 1 byte | Status of internet command of [type] |
+| Internet Command | 0xc0 | 0x01 | counter byte 1 | counter byte 2 | remaining byte | [size] | [type] | 1 byte |  Send the path for an internet command of type [type] |
+| Internet Command | 0xc0 | 0x02 | counter byte 1 | counter byte 2 | remaining byte | [size] | [type] | 1 byte |  Send the options for an internet command of type [type] |
+| Internet Command | 0xc0 | 0x03 | [type] | 0x00 | 0x00 | 0x00 | 0x00 | 5 bytes | Return HyperSector for data returned from Internet command of [type] |
+| Wikipedia Command | 0xc1 | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Return Wikipeda page :) - Placeholder for more consideration! |
+| Youtube Command | 0xc2 | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Play Youtube :) - Placeholder for more consideration!|
+| Audio Command | 0xca | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return count of MP3's found |
+| Audio Command | 0xca | 0x01 | MP3 ID Byte 1 | MP3 ID Byte 2 | [size] | 0x00 | 0x00 | 255 bytes or [size] | Return name of MP3 with given ID, if [size] is 0x00 return 255 chars ending on 0x02 (EOT). If size is smaller then truncate down to number given. |
+| Audio Command | 0xca | 0x02 | MP3 ID Byte 1 | MP3 ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Play MP3 with given ID |
+| Audio Command | 0xca | 0xff | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Stop playing! |
 | ODE Command | 0xcd | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return how many CD images are currently indexed |
 | ODE Command | 0xcd | 0x01 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Refresh & rescan directory for new CD Images |
 | ODE Command | 0xcd | 0x02 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Load CD with ID the ID given (use ID 0xffff to eject *without* loading a new CD).|
@@ -110,8 +120,8 @@ This section describes commands that are not valid on an original drive. They sh
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | Word byte 1 | Word Byte 2 | 1 byte | Update the Description of the CD image with the given ID, text to follow using 0xce of "length" words. This will only update the database. Responds with a single byte to indicate clear to send. Note that if the Text does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | Catagory | 0x00 | Nothing | Set the Catagory of the CD with the ID given to "Catagory". |
 | ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Reset the sort order |
-| ODE Command Data Extension | 0xce | Word count Byte 1 | Word Count Byte 2 | data | data | data | data | 2 byte | Send data split into (4 byte) words . Returns the word count if successfully received). 
-| Configuation | 0xcf | TBC | TBC | TBC | TBC | TBC | TBC | TBC | Configuration of the PiDrive |
+| ODE Command Data Extension | 0xce | Counter Byte 1 | Counter Byte 2 | data | data | data | data | 2 byte | Send data split into chunks. This is intended to be used by multiple commands and requires setup first! Returns the two byte counter if successfully received. Note this is intended to be increased if/when longer commands can be sent. |
+| Configuation | 0xcf | TBC | TBC | TBC | TBC | TBC | TBC | TBC | Configuration of the PiDrive. - Placeholder for more consideration! |
 
 
 ### 0xA4 - FP Command ###
