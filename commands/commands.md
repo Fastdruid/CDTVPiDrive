@@ -27,7 +27,7 @@ Where MSF/LSN is given MSF = 0x02, LSN = 0x00
 | Play (MSF) | 0x0a | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing - Plays audio | Plays Audio by using MSF references |
 | Play (track) | 0x0b | start track | start index | end track | end index | 0x00 | 0x00 | Nothing - Plays audio | Plays Audio by track |
 | Play XA | 0x0c | UNK | UNK | UNK | UNK | UNK | UNK | Unknown | Unknown |
-| Checkpath | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 Bytes | There are very few details on this but I believe this is a diagnostic command that checks the data path. |
+| Checkpath | 0x80 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 Bytes | There are very few details on this but I believe this is a diagnostic command that checks the data path. |
 | Status | 0x81 | | | | | | | 1 byte | The only single byte command! Requests a status byte from the drive. |
 | Read / Reset Error | 0x82 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 6 bytes | Reads and then resets the error status. |
 | Model name | 0x83 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 12 bytes | Returns Model and version, MATSHITA0.96 or MATSHITA0.97 on an original drive. |
@@ -105,9 +105,13 @@ This section describes commands that are not valid on an original drive. They sh
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image with the ID given. |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | 0x00 | 0x00 | 1 bytes | Returns the catagory of the CD image. |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | Position | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | Word byte 1 | Word Byte 2 | 1 byte | Update the filename of the CD image with the filename given, text to follow using 0xce of "length" words. This will rename the file. Responds with a single byte to indicate clear to send. Note that if the filename does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char|
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | Word byte 1 | Word Byte 2 | 1 byte | Update the path of the CD image with the path given, text to follow using 0xce of "length" words. This will move the files. Responds with a single byte to indicate clear to send. Note that if the path does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | Word byte 1 | Word Byte 2 | 1 byte | Update the Description of the CD image with the given ID, text to follow using 0xce of "length" words. This will only update the database. Responds with a single byte to indicate clear to send. Note that if the Text does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | Catagory | 0x00 | Nothing | Set the Catagory of the CD with the ID given to "Catagory". |
 | ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Reset the sort order |
-
+| ODE Command Data Extension | 0xce | Word count Byte 1 | Word Count Byte 2 | data | data | data | data | 2 byte | Send data split into (4 byte) words . Returns the word count if successfully received). 
+| Configuation | 0xcf | TBC | TBC | TBC | TBC | TBC | TBC | TBC | Configuration of the PiDrive |
 
 
 ### 0xA4 - FP Command ###
@@ -134,6 +138,30 @@ CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "sp
 * 0x04 - Return information on the CD image with given ID from the internal database.
 * 0x05 - Update the internal database.
 * 0x06 - reset the custom list to default sort order (in ID order)
+
+### 0xCD - ODE Command Data Extension ###
+#### Description ####
+This command is purely for data transfer. It will transfer up to 65535 Words (4 byte words) for a total of ~256kb. Overhead is somewhat hefty here... 3+2 bytes overhead for every 4 bytes sent! Still I think we could probably get acceptable throughput. 
+When sending text then a 0x02 (EOT) should be used as End Of Text :) 
+When sending data then the previous command will set 
+##### Byte 1 - Word byte 1 #####
+##### Byte 2 - Word byte 2 #####
+##### Byte 3 - Data byte 0 #####
+##### Byte 4 - Data byte 1 #####
+##### Byte 5 - Data byte 2 #####
+##### Byte 6 - Data byte 3 #####
+#### Returns ####
+Returns the last successfully received Word count. The CDTV should wait for this ack and resend the appropriate data if it doesn't get the same two byts back that it just sent!
+
+### 0xCF - Configuration Commands ###
+#### Description ####
+These commands allow configuration of various parameters from the CDTV via AmigaOS. 
+##### Byte 1 - Sub-Command #####
+
+
+
+
+
 
 
 
