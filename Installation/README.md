@@ -1,5 +1,8 @@
 ## INSTALLATION INSTRUCTIONS - DEV/TEST ##
 
+**NOTE:** By installing cdtvpidrive it will make a number of system changes. Do not install this (except for testing) on a Pi not intended for this. It is recommended to wipe the MicroSD card to if you desire to uninstall. 
+
+
 Note that Windows 10 was used for this installation however as the imager is available for macOS and Ubuntu there should be no significant changes. Raspberry Pi Imager unfortunately unavailable for AmigaOS!
 
 1. Install the Raspberry Pi Imager (v1.9.4 used - https://www.raspberrypi.com/software/
