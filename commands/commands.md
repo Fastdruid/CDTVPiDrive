@@ -149,7 +149,7 @@ CD images are given a unique ID from 0x0001 to 0xfffe. 0x0000 and 0xffff are "sp
 * 0x05 - Update the internal database.
 * 0x06 - reset the custom list to default sort order (in ID order)
 
-### 0xCD - ODE Command Data Extension ###
+### 0xCE - ODE Command Data Extension ###
 #### Description ####
 This command is purely for data transfer. It will transfer up to 65535 Words (4 byte words) for a total of ~256kb. Overhead is somewhat hefty here... 3+2 bytes overhead for every 4 bytes sent! Still I think we could probably get acceptable throughput. 
 When sending text then a 0x02 (EOT) should be used as End Of Text :) 
