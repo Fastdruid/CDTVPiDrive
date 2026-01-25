@@ -86,7 +86,7 @@ Returns 5 bytes. The first three bytes are the number of data sectors and the la
 ### 0xA3 - Disable FP ###
 
 ## New ##
-This section describes commands that are not valid on an original drive. They should not be used without a PiDrve as unexpected results may occur! 
+This section describes commands that are not valid on an original drive. They should not be used without a PiDrive as unexpected results may occur! 
 
 | Command Name | Command Byte | Byte 1 | Byte 2 | Byte 3 | Byte 4 | Byte 5 | Byte 6 | Returns | Description |
 | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
