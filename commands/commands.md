@@ -108,18 +108,19 @@ This section describes commands that are not valid on an original drive. They sh
 | ODE Command | 0xcd | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return how many CD images are currently indexed |
 | ODE Command | 0xcd | 0x01 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Refresh & rescan directory for new CD Images |
 | ODE Command | 0xcd | 0x02 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Load CD with ID the ID given (use ID 0xffff to eject *without* loading a new CD).|
-| ODE Command | 0xcd | 0x03 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return the current loaded CD ID |
-| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | 0x00 | 0x00 | 1 byte | Return the position of the CD with the ID given in the "quick list" |
+| ODE Command | 0xcd | 0x03 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return the ID of the current loaded CD Image |
+| ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | List ID | 0x00 | 0x00 | 1 byte | Return the position of the CD with the ID given in the given list. If List ID is 0x00 then its the currently loaded list. If the CD with that ID is not in the list then returns 0xff |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | length | 0x00 | variable bytes | Returns the first "length" bytes of the filename of the CD image with the ID given. |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | length | 0x00 | variable bytes | Returns the first "length" bytes of the path of the CD image with the ID given. |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | length | 0x00 | variable bytes | Returns the first "length" bytes of the text description of the CD image with the ID given. |
 | ODE Command | 0xcd | 0x04 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | 0x00 | 0x00 | 1 bytes | Returns the catagory of the CD image. |
-| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | Position | 0x00 | Nothing | Set the position of the CD with the ID given in the "quick list" to "position". |
+| ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x00 | Position | List ID | Nothing | Set the position of the CD with the ID given in into the specified list "List ID" to "position". Note that if the list does not exist this will create it. |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x01 | Word byte 1 | Word Byte 2 | 1 byte | Update the filename of the CD image with the filename given, text to follow using 0xce of "length" words. This will rename the file. Responds with a single byte to indicate clear to send. Note that if the filename does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char|
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x02 | Word byte 1 | Word Byte 2 | 1 byte | Update the path of the CD image with the path given, text to follow using 0xce of "length" words. This will move the files. Responds with a single byte to indicate clear to send. Note that if the path does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x03 | Word byte 1 | Word Byte 2 | 1 byte | Update the Description of the CD image with the given ID, text to follow using 0xce of "length" words. This will only update the database. Responds with a single byte to indicate clear to send. Note that if the Text does not cleanly divide by 4 then a 0x02 (EOT) will be used as the final char |
 | ODE Command | 0xcd | 0x05 | Disc ID Byte 1 | Disc ID Byte 2 | 0x04 | Catagory | 0x00 | Nothing | Set the Catagory of the CD with the ID given to "Catagory". |
 | ODE Command | 0xcd | 0x06 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Reset the sort order |
+| ODE Command | 0xcd | 0x07 | List ID | 0x00 | 0x00 | 0x00 | 0x00 | List ID if successful. Oxff if the list does not exist | Swap to the given List ID. |
 | ODE Command Data Extension | 0xce | Counter Byte 1 | Counter Byte 2 | data | data | data | data | 2 byte | Send data split into chunks. This is intended to be used by multiple commands and requires setup first! Returns the two byte counter if successfully received. Note this is intended to be increased if/when longer commands can be sent. |
 | Configuation | 0xcf | TBC | TBC | TBC | TBC | TBC | TBC | TBC | Configuration of the PiDrive. - Placeholder for more consideration! |
 
