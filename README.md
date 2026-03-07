@@ -9,13 +9,15 @@ This is an attempt to create a replacement drive for the CDTV that will allow ei
 
 ## Status
 
-WIP - Functionally complete on dev hardware. Requires integration and automation as functionality is currently very "manual".
+WIP - Functionally complete on dev hardware. Software getting close to first release.
+
+Current state of play can be seen here: https://www.youtube.com/watch?v=sTaW73tuEsM
 
 ## Hardware
 
 On what is hopefully the final release of the hardware!
 
-### Rev 0.9c
+### Rev 0.9e
 
 #### Known Issues
 None yet!
