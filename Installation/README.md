@@ -40,3 +40,22 @@ Note that Windows 10 was used for this installation however as the imager is ava
 .... and thats it for now
 
 
+Notes:
+dtoverlay=max98357a
+core_freq=250
+
+#dtparam=audio=on  # Comment this out
+hdmi_drive=2   
+
+# Permanent: Edit /usr/share/alsa/alsa.conf or ~/.asoundrc
+pcm.!default {
+    type hw
+    card 1  # Adjust based on aplay -l (usually 0 or 1 for I2S)
+}
+ctl.!default {
+    type hw
+    card 1
+}
+
+ libasound2-dev
+
