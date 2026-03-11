@@ -38,9 +38,9 @@ Ensure that you select Bookworm and not Trixie (Trixie is untested).
   `echo "deb [trusted=yes arch=armhf] https://fastdruid.co.uk/PiDrive/ testing main" | sudo tee /etc/apt/sources.list.d/fastdruid.list`  
   `sudo apt update`  
   `sudo apt upgrade -y`  
-  `sudo apt install cdtvpidrive`  
-  `sudo apt install cdtvfirmware`  
-  `sudo apt install cdtvisobuilder`  
+  `sudo apt install cdtvpidrive -y`  
+  `sudo apt install cdtvfirmware -y`  
+  `sudo apt install cdtvisobuilder -y`  
   `sudo shutdown -h now`  
 
 At this point you _must_ powercycle the CDTV and its recommended to leave it off for at least 30 seconds.  This is because the firmware loaded to the CPLD requires a cold start to work correctly. 
