@@ -15,12 +15,14 @@ Current state of play can be seen here: https://www.youtube.com/watch?v=sTaW73tu
 
 ## Hardware
 
-On what is hopefully the final release of the hardware!
+One more revision of hardware to go!
 
-### Rev 0.9e
+### Rev 0.9
 
 #### Known Issues
-None yet!
+1) Almost impossible to solder through to the Pi for the contact points for the USB.
+2) Too tight on the side for the cable to pass through.
+3) Needs lots of disassembly to fit. Making it smaller should mean its possible to fit without totally taking the CDTV apart.
 
 #### Status
 Ordered
