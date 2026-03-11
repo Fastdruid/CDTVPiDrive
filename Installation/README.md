@@ -1,4 +1,4 @@
-## INSTALLATION INSTRUCTIONS - DEV/TEST ##
+## MicroSD INSTRUCTIONS - DEV/TEST ##
 
 **NOTE:** By installing cdtvpidrive it will make a number of system changes. Do not install this (except for testing) on a Pi not intended for this. It is recommended to wipe the MicroSD card to if you desire to uninstall. 
 
