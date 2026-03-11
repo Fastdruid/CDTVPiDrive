@@ -39,7 +39,9 @@ Ensure that you select Bookworm and not Trixie (Trixie is untested).
   `sudo apt install cdtvpidrive`  
   `sudo apt install cdtvfirmware`  
   `sudo apt install cdtvisobuilder`  
-  `sudo shutdown -r now`  
+  `sudo shutdown -h now`  
+
+At this point you _must_ powercycle the CDTV and its recommended to leave it off for at least 30 seconds.  This is because the firmware loaded to the CPLD requires a cold start to work correctly. 
 
 
 .... and thats it for now
