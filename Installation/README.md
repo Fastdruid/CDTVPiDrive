@@ -5,10 +5,13 @@
 
 Note that Windows 10 was used for this installation however as the imager is available for macOS and Ubuntu there should be no significant changes. Raspberry Pi Imager unfortunately unavailable for AmigaOS!
 
-1. Install the Raspberry Pi Imager (v1.9.4 used - https://www.raspberrypi.com/software/
+1. Install the Raspberry Pi Imager (v2.0.6 used - https://www.raspberrypi.com/software/)
 2. Insert a MicroSD card into the computer. Recommended at least 64GB and at absolute minimum a Class 10 (recommended UHS).
 3. Run the Raspberry Pi Imager selecting the Device as "RASPBERRY PI ZERO 2 W".
-4. For the OS select "Raspberry Pi OS (other)" and then "Raspberry Pi OS Lite (32-bit)".
+<img width="682" height="482" alt="image" src="https://github.com/user-attachments/assets/a49fbd17-52ec-43c3-9897-20f828fb9741" />
+4. For the OS select "Raspberry Pi OS (other)" and then "Raspberry Pi OS (Legacy, 32-bit) Lite".
+Ensure that you select Bookworm and not Trixie (Trixie is untested). 
+<img width="682" height="482" alt="image" src="https://github.com/user-attachments/assets/a97b62ed-f9eb-4933-bacb-79de63b4f360" />
 5. Select your storage. Ensure you select the correct device!
 6. Select Next
 7. When the "Would you like to apply OS customisation settings" window pops up select "EDIT SETTINGS"
