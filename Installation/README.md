@@ -35,7 +35,7 @@ Ensure that you select Bookworm and not Trixie (Trixie is untested).
 
   `echo "deb [trusted=yes arch=armhf] https://fastdruid.co.uk/PiDrive/ testing main" | sudo tee /etc/apt/sources.list.d/fastdruid.list`  
   `sudo apt update`  
-  `sudo apt upgrade`  
+  `sudo apt upgrade -y`  
   `sudo apt install cdtvpidrive`  
   `sudo apt install cdtvfirmware`  
   `sudo apt install cdtvisobuilder`  
