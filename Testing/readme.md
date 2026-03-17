@@ -28,9 +28,27 @@
 | Lemmings (game) | 17/03/2026 | Yes | Yes | | No reboot on eject |
 | Lemmings (demo) | 17/03/2026 | Yes | Yes | | |
 | Games & Goodies | 17/03/2026 | Yes | Barely touched the surface|| Far too much to test everything|
-| Guy Spy and the Crystals of Armageddon| 17/03/2026 | Yes | Yes || No reboot on disk eject!|
+| Guy Spy and the Crystals of Armageddon| 17/03/2026 | Yes | Yes || No reboot on disc eject!|
 | Ultimate Basketball! | 17/03/2026 | Yes | Yes |||
 | Raffles | 17/03/2026 | Yes | Yes |||
 | Power Pinball | 17/03/2026 | Yes | Yes |||
 | Psycho Killer | 17/03/2026 | Yes | Yes |||
-| Dune (CDTV) |17/03/2026 | No | Not Tested | Just gets as far as "Once upon a time"||
+| Dune (CDTV) |17/03/2026 | Yes | Yes | | |
+| Defender of the Crown | 17/03/2026 | Yes | No | I think 0x87 is getting hung up | |
+| Sim City |  17/03/2026 | Yes | Yes | Sometimes hangs on the menu ||
+| Snoopy - The Case of the Missing Blanket | 17/03/2026 | Yes | Yes || No reboot on disc eject! |
+| Super Games PAK | 17/03/2026| Yes | Barely touched the surface|| Far too much to test everything|
+| Shiftrix & Lettrix | 17/03/2026 | Yes | Shiftrix |||
+| Alien Breed - Tower Assault | No | No | Unable to load AB: insufficient free store | Need to test in WinUAE |
+| Mind Run | 17/03/2026 | Yes | Yes |||
+| The Curse of RA | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
+| Chaos in Andromeda - Eyes of the Eagle | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
+| The Case of the Cautious Condor | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
+| Black_Viper_CDTV | 17/03/2026 | No | Not Tested || Need to test in WinUAE |
+| Turrican | 17/03/2026 | Yes | Yes |||
+|  Secret of Monkey Island (CDTV) | 17/03/2026 | Yes | Yes || Need a mouse, can't get past the Red Herring! |
+
+
+
+
+
