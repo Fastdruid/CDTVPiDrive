@@ -39,7 +39,6 @@
 | Snoopy - The Case of the Missing Blanket | 17/03/2026 | Yes | Yes || No reboot on disc eject! |
 | Super Games PAK | 17/03/2026| Yes | Barely touched the surface|| Far too much to test everything|
 | Shiftrix & Lettrix | 17/03/2026 | Yes | Shiftrix |||
-| Alien Breed - Tower Assault | No | No | Unable to load AB: insufficient free store | Need to test in WinUAE |
 | Mind Run | 17/03/2026 | Yes | Yes |||
 | The Curse of RA | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
 | Chaos in Andromeda - Eyes of the Eagle | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
