@@ -16,7 +16,7 @@
 | It Came from the Desert | 17/03/2026 | Yes  | Yes |||
 | Indiana Jones and the Last Crusade | 17/03/2026 | Yes  | Yes |||
 | Winzer | 17/03/2026 | Yes | Fails |Hangs at game start ||
-| Wrath of the Demon | 17/03/2026 | Yes | Kind of || Need to check the musing speed in WinUAE, Joypad seems to stop working after a short while|
+| Wrath of the Demon | 17/03/2026 | Yes | Kind of || Need to check the music speed in WinUAE, Joypad seems to stop working after a short while|
 | Will Bridge - Practice 1 - Introduction to Bidding | 17/03/2026 | Yes | Not tested | ||
 | Will Bridge - Practice 2 - Intermediate | 17/03/2026 | Yes | Not tested | ||
 | Will Bridge - Practice 2 - Perfectionnement | 17/03/2026| Yes | Not tested|||
