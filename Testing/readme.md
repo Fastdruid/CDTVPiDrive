@@ -43,9 +43,10 @@
 | The Curse of RA | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
 | Chaos in Andromeda - Eyes of the Eagle | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
 | The Case of the Cautious Condor | 17/03/2026 | Yes | Yes but no idea what I'm doing |||
-| Black_Viper_CDTV | 17/03/2026 | No | Not Tested || Need to test in WinUAE |
+| Black_Viper_CDTV | 17/03/2026 | No | Not Tested | Boots so far then just hangs at a blank screen with a mouse cursor!| Need to test in WinUAE |
 | Turrican | 17/03/2026 | Yes | Yes |||
 |  Secret of Monkey Island (CDTV) | 17/03/2026 | Yes | Yes || Need a mouse, can't get past the Red Herring! |
+| Battlestorm | Yes | Yes |||
 
 
 
