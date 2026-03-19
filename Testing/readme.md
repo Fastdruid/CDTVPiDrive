@@ -16,7 +16,7 @@
 | It Came from the Desert | 17/03/2026 | Yes  | Yes |||
 | Indiana Jones and the Last Crusade | 17/03/2026 | Yes  | Yes |||
 | Winzer | 17/03/2026 | Yes | Fails |Hangs at game start ||
-| Wrath of the Demon | 17/03/2026 | Yes | Yes | Seems to hang after the introduction animation... but then WinUAE does the same and then crashes at that point! | Need to check the music speed in WinUAE|
+| Wrath of the Demon | 19/03/2026 | Yes | Yes | | |
 | Will Bridge - Practice 1 - Introduction to Bidding | 17/03/2026 | Yes | Not tested | ||
 | Will Bridge - Practice 2 - Intermediate | 17/03/2026 | Yes | Not tested | ||
 | Will Bridge - Practice 2 - Perfectionnement | 17/03/2026| Yes | Not tested|||
@@ -34,7 +34,7 @@
 | Power Pinball | 17/03/2026 | Yes | Yes |||
 | Psycho Killer | 17/03/2026 | Yes | Yes |||
 | Dune (CDTV) |17/03/2026 | Yes | Yes | | |
-| Defender of the Crown | 17/03/2026 | Yes | No | I think 0x87 is getting hung up | |
+| Defender of the Crown | 17/03/2026 | Yes | Yes | Some audio timing issues. | Seems to be playing slightly too long, ie into the next audio clip. Maybe a calculation issue here. |
 | Sim City |  19/03/2026 | Yes | Yes |||
 | Snoopy - The Case of the Missing Blanket | 17/03/2026 | Yes | Yes || No reboot on disc eject! |
 | Super Games PAK | 17/03/2026| Yes | Barely touched the surface|| Far too much to test everything|
