@@ -8,14 +8,14 @@
 | Xenon II | 17/03/2026 | Yes | Yes | Some slight Audio timing issues | |
 | Hound of the Baskervilles | 17/03/2026 | Yes | Yes | | |
 | Trivial Persuit (disc 1) | 17/03/2026 | Yes | Yes |||
-| Trivial Persuit (disc 2) | 17/03/2026 | Yes | Fails |||
+| Trivial Persuit (disc 2) | 17/03/2026 | Yes |Yes |||
 | Town with no Name | 17/03/2026 | Yes | Not tested |||
-| Tie Break | 17/03/2026 | Yes | Not tested || Seems to hang just after the menu |
+| Tie Break | 19/03/2026 | Yes | Yes |||
 | Turrican | 17/03/2026 | Yes | Not tested || No reboot on disc eject! |
 | Team Yankee | 17/03/2026 | No | No | Red Error | Doesn't work on WinUAE either |
 | It Came from the Desert | 17/03/2026 | Yes  | Yes |||
 | Indiana Jones and the Last Crusade | 17/03/2026 | Yes  | Yes |||
-| Winzer | 17/03/2026 | Yes | Fails |Hangs at game start ||
+| Winzer | 19/03/2026 | Yes | Yes | ||
 | Wrath of the Demon | 19/03/2026 | Yes | Yes | | |
 | Will Bridge - Practice 1 - Introduction to Bidding | 17/03/2026 | Yes | Not tested | ||
 | Will Bridge - Practice 2 - Intermediate | 17/03/2026 | Yes | Not tested | ||
