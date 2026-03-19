@@ -35,7 +35,7 @@
 | Psycho Killer | 17/03/2026 | Yes | Yes |||
 | Dune (CDTV) |17/03/2026 | Yes | Yes | | |
 | Defender of the Crown | 17/03/2026 | Yes | No | I think 0x87 is getting hung up | |
-| Sim City |  17/03/2026 | Yes | Yes | Sometimes hangs on the menu ||
+| Sim City |  19/03/2026 | Yes | Yes |||
 | Snoopy - The Case of the Missing Blanket | 17/03/2026 | Yes | Yes || No reboot on disc eject! |
 | Super Games PAK | 17/03/2026| Yes | Barely touched the surface|| Far too much to test everything|
 | Shiftrix & Lettrix | 17/03/2026 | Yes | Shiftrix |||
