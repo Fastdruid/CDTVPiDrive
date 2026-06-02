@@ -95,11 +95,8 @@ This section describes commands that are not valid on an original drive. They sh
 | FP Command | 0xa4 | 0x40 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel FF Pressed |
 | FP Command | 0xa4 | 0x20 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel REW Pressed |
 | FP Command | 0xa4 | 0x08 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel Requested current Track |
-| Internet Command | 0xc0 | 0x00 | [type] | 0x00 | 0x00 | 0x00 | 0x00 | 1 byte | Status of internet command of [type] |
-| Internet Command | 0xc0 | 0x01 | counter byte 1 | counter byte 2 | remaining byte | [size] | [type] | 1 byte |  Send the path for an internet command of type [type] |
-| Internet Command | 0xc0 | 0x02 | counter byte 1 | counter byte 2 | remaining byte | [size] | [type] | 1 byte |  Send the options for an internet command of type [type] |
-| Internet Command | 0xc0 | 0x03 | [type] | 0x00 | 0x00 | 0x00 | 0x00 | 5 bytes | Return HyperSector for data returned from Internet command of [type] |
-| Wikipedia Command | 0xc1 | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Return Wikipeda page :) - Placeholder for more consideration! |
+| IP Command | 0xc0 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Setup - See (networking)[networking.md] |
+| IP Command | 0xc1 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Data - See (networking)[networking.md] |
 | Youtube Command | 0xc2 | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Play Youtube :) - Placeholder for more consideration!|
 | Audio Command | 0xca | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return count of MP3's found |
 | Audio Command | 0xca | 0x01 | MP3 ID Byte 1 | MP3 ID Byte 2 | [size] | 0x00 | 0x00 | 255 bytes or [size] | Return name of MP3 with given ID, if [size] is 0x00 return 255 chars ending on 0x02 (EOT). If size is smaller then truncate down to number given. |
