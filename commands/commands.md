@@ -95,9 +95,13 @@ This section describes commands that are not valid on an original drive. They sh
 | FP Command | 0xa4 | 0x40 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel FF Pressed |
 | FP Command | 0xa4 | 0x20 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel REW Pressed |
 | FP Command | 0xa4 | 0x08 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | Nothing | Front Panel Requested current Track |
-| IP Command | 0xc0 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Setup - See (networking)[networking.md] |
-| IP Command | 0xc1 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Data - See (networking)[networking.md] |
-| Youtube Command | 0xc2 | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Play Youtube :) - Placeholder for more consideration!|
+| IP Command | 0xc0 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Setup / Control - See networking.md |
+| IP Command | 0xc1 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Data / transmit - See networking.md |
+| IP Command | 0xc2 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command Poll / Receive status - See networking.md |
+| IP Command | 0xc3 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command fetch / receive data - See networking.md |
+| IP Command | 0xc4 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command ack / bookkeeping - See networking.md |
+| IP Command | 0xc5 | TBC | TBC | TBC | TBC | TBC | TBC | TBC | IP Command reset / clear state - See networking.md |
+| Youtube Command | TBC | tbc | tbc | tbc | tbc | tbc | tbc | tbc | Play Youtube :) - Placeholder for more consideration!|
 | Audio Command | 0xca | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 0x00 | 2 bytes | Return count of MP3's found |
 | Audio Command | 0xca | 0x01 | MP3 ID Byte 1 | MP3 ID Byte 2 | [size] | 0x00 | 0x00 | 255 bytes or [size] | Return name of MP3 with given ID, if [size] is 0x00 return 255 chars ending on 0x02 (EOT). If size is smaller then truncate down to number given. |
 | Audio Command | 0xca | 0x02 | MP3 ID Byte 1 | MP3 ID Byte 2 | 0x00 | 0x00 | 0x00 | Nothing | Play MP3 with given ID |
