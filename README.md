@@ -9,9 +9,9 @@ This is an attempt to create a replacement drive for the CDTV that will allow ei
 
 ## Status
 
-WIP - Functionally complete on dev hardware. Software getting close to first release.
+Postponed.
 
-Current state of play can be seen here: https://www.youtube.com/watch?v=sTaW73tuEsM
+While functionally complete and "production" ready hardware finalised the project has stalled due to the total unavailability of the Raspberry Pi Zero 2W. 
 
 ## Hardware
 
