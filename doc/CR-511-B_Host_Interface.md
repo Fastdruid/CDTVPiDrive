@@ -10,7 +10,7 @@
 - **Quality warning:** Source 1 is a degraded scan. Numbers marked `[table]` were read from page images, not the OCR text, but should be re-checked against the PDF before being used as hard limits.
 - **Analyser limitations:** The analyser is sampling at varying rates 16Mhz-32Hz. This gives a minimum detected period of 62.5ns-31.25ns. 
 - **Scope:** the **host-side (front-end) interface only**: what the CDTV sees at the pins.
-- **Chips:** for this use LC8950, LC8951, LC89510 and LC89515 behave identically.
+- **Chips:** The LC8950, LC8951, LC89510 and LC89515 were designed to be drop in replacements how behave identically 
 - **This document describes the actual interface.**
 - How the CPLD/Pi/RP2350 implementation behaves is documented separately in `docs/CDTV_PiDrive-implementation.md`. 
 
@@ -20,7 +20,7 @@ The MKE CR-511-B is a single speed CD-ROM used exclusively in the Commodore CDTV
 
 The ODE **emulates the entire drive**, the LC8951 chip is the **host interface**, the M50423FP is the **DSP**. The CDTV is the **host**. So:
 
-- The ODE always **drives** the following outputs: `STEN`, `DRQ`, `EFFK`, `SCBP`, `SCOR`.
+- The ODE always **drives** the following outputs: `STEN`, `DRQ`, `EFFK`, `SCBP`, `SCOR`, `DATA`, `BCLK`, `LRCLK`, `C16M`
 - The ODE always **samples** the following inputs: `ENABLE`, `CMD`, `HRD`, `HWR`, `RESET`, `SCCK`, `SCK`.
 - The ODE **samples** `HD[0-7]` during command write from CDTV *to* the drive/ODE). 
 - The ODE **drives** `HD[0-7]`  during data read from drive/ODE *to* the CDTV.
@@ -203,7 +203,49 @@ Command set (known)
 6) DRIVE resets `SDATA` LOW on the falling edge of `SCLK`
 7) Once all bits have transferred (8 pulses of `SCLK`) the DRIVE disconnects drive to `SDATA` allowing it to return HIGH. 
 
-## 9. Reset
+## 9. Audio
+
+Audio from the drive is "EIAJ CP-340 type II" commonly known as "EIAJ Format". This is an early relatively poorly documented three wire digital audio standard that is similar to but fundamentally incompatible with I2S. The audio stream is decoded by a Sanyo LC7883 DAC running in 48CLK-384Fs operations.
+The digital audio data is right justified MSB first two's complement format. It utilises a 16-bit bit depth serial signal within a 24-bit frame. The MSB must be sign-extended to fill the frame. 
+
+An comparison between the common I2S and EIAJ is given below (this example shows 18-bit bit depth in an 24-bit frame EIAJ )
+<img width="556" height="400" alt="image" src="https://github.com/user-attachments/assets/7753322c-df7a-44a1-9917-08ea69bb9d77" />
+
+Purely because you can never have too many diagrams here is another one showing 16-bit depth in a 24-bit frame EIAJ:
+
+<img width="813" height="149" alt="image" src="https://github.com/user-attachments/assets/fc1874f1-a54d-4861-bb42-ffa639495c7b" />
+
+Pin descriptions 
+
+| Name | Description | Frequency |
+| --- | --- | --- |
+| `DATA` | Digital audio data | n/a | 
+| `BCLK` | Bit Clock | 2.1168 MHz |
+| `LRCLK` | Word Clock | 44.1 kHz |
+| `C16M` | DAC clock source | 16.9344Mhz |
+
+### 9.1 Bit clock - BCLK
+Frequency is 2.1168 MHz 
+Data bits are changed on the *falling* edge of `BCLK`
+Data bits are latched/sampled by the receiving device on the *rising* edge of `BCLK`
+
+### 9.2 Word clock - LRCLK
+Frequency is 44.1 kHz
+The EIAJ word clock (`LRCLK`) is opposite to I2S, HIGH (1) is the left channel, LOW (0) is the right Channel
+`LRCLK` changes on the *falling* edge of `BCLK` after the LSB. Note this is again different to I2S where the word clock changes on the falling edge immediately before the LSB. 
+
+## 10. Subcode - EFFK, SCOR, SCCK and SCBP
+
+The CDTV is rare in being able to play CD+G, this is achieved by the CDTV using the `EFFK` ((EFM Frame Clock Output) clock along with the Amiga `CCK` clock (3.546895MHz for PAL, 3.579545MHz for NTSC) and triggered by `SCOR` (Subcode Sync output) to give 8 pulses at the `CCK` frequency once per `EFFK` clock. This clock signal is then fed back into the drive on `SCCK` and this clocks the subcode output on `SBCP`. As `SCOR` triggers when S0 *and* S1 have been detected the effect is that the CDTV sends 97 bursts of 8 pulses on `SBCP` for every 98 frames. The output of `SBCP` for the 97th set of pulses is always therefore the S0 synchronization signal and the S1 is always missed. 
+
+The drive outputs the `EFFK` clock, as a single speed CD-ROM is 75 sectors per second and each sector is 98 frames this is 7350 frames per second or 7.35kHz with a 50% duty cycle. 
+The `SCOR` signal serves as the master sector sync marker. It fires immediately following the successful pattern matching of the S0 and S1 frames. To quote the original datasheet: *"When the subcode synchronizing patterns S0 or S1 is detected as synchronizing signal of subcode data, the synchronizing signals are output on the SCOR pin."* The datasheet specifies that this strobe triggers exactly **43t** after the falling edge of `EFFK`, where `t` represents the internal VCO clock period (typically $1 / 8.6436 \text{ MHz} = 115.7 \text{ ns}$). This places the theoretical trigger point exactly **4.9751 µs** after the falling edge of `EFFK`. The `SCOR` strobe then stays high for exactly one frame duration (approximately 140 µs).
+
+The subcode output is on `SBCP` and is sent in the channel order P,Q,R,S,T,U,V,W. This is output on the rising edge of `SCCK` and then read by the CDTV on the falling edge. 
+
+Realistically the timing here does not need to be cycle exact. As long as SCOR fires roughly at the start of each sector and we reset our subcode sending buffer simultaneously any discrepancy given the low bandwidth will be imperceptible.    
+
+## 11. Reset
 
 - `/RESET` low,  resets the chip. [text] M p.59 / PDF p.70
 - On reset: all tristate outputs go high-impedance (including `HD[0-7]`), the command FIFO is cleared, the interface control and decoder control registers are cleared (which disables data and status output until the controller re-enables them), and the MCK output is suppressed. [text] M p.59
